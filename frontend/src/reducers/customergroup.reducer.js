@@ -4,6 +4,7 @@ const initialState = {
     form_data: [],
     list_data: [],
     dropdown_data : [],
+    selected_customer_dropdown : [],
     error: ''
 }
 export function customergroup(state = initialState, action) {
@@ -29,6 +30,7 @@ export function customergroup(state = initialState, action) {
         return {
                 ...state,
                 form_data: action.data.data,
+                selected_customer_dropdown : action.data.data.sel_group_customers,
                 loading: false,
                 error: ''
             };

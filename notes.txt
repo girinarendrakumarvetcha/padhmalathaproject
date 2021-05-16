@@ -94,7 +94,9 @@ db.getCollection("draw_group").aggregate([
     },
     {
         "$project": {
-            "contactIds": {
+						"name": "$name",
+						"shortCode": "$shortCode",
+						"contactIds": {
                 "$toObjectId": "$contactIds"
             }
         }
@@ -145,3 +147,55 @@ db.getCollection("auction_master").aggregate([
         }
     }
 ]);
+
+
+
+db.getCollection("draw_group").aggregate([
+		{
+			$addFields: {
+    			 drawGroupId: { $toString: "$_id" }
+				}
+		},
+		{
+    		 $match: { drawGroupId: "609df75cb23b2a167492a541" }
+		 },
+		{ $match: {"_id":ObjectId("609df75cb23b2a167492a541")} },
+		{
+        $unwind: "$contactIds"
+    },
+    {
+        "$project": {
+						"name": "$name",
+						"shortCode": "$shortCode",
+						"contactIds": {
+                "$toObjectId": "$contactIds"
+            }
+        }
+    },
+    {
+        $lookup: {
+            from: "contact_master",
+            localField: 'contactIds',
+            foreignField: "_id",
+            as: "contact_details"
+        }
+    },
+    {
+        $group: {
+            "_id" : "$_id",
+						"name": { "$first": "$name" },
+						"shortCode": { "$first": "$shortCode" },
+						"customer_details": {
+                $addToSet: "$contact_details"
+            }
+        }
+    }
+])
+
+
+str.replace(/\s+/g, '-').toLowerCase()
+
+
+onChange = {(e) => { getFromShortCode(this.props,e,"group_short_code")}}
+
+import { getShortCode , getFromShortCode } from "../../helpers/system_callbacks";

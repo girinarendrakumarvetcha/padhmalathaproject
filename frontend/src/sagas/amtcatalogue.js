@@ -37,6 +37,7 @@ function saveAmtCatalogueDetails() {
       if (response && response.data.success) {
         yield put(amtcatalogueActions.saveAmtCatalogueDetailsSuccess(response.data));
         history.push(`${routes.AMOUNT_CATALOG_LIST}`);
+        window.location.reload();
         //yield put(push(`${routes.AmtCatalogue_LIST}`));
       } else {
         yield put(amtcatalogueActions.saveAmtCatalogueDetailsFailure(response));

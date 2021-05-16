@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import { getFromShortCode } from "../../helpers/system_callbacks";
 import { Field, reduxForm } from 'redux-form';
 import { inputField } from "../../helpers/domcontrols";
 import { required } from "../../helpers/validators";
@@ -26,6 +27,7 @@ class AmountCatalogForm extends Component {
                             component={inputField}
                             containerclass='col-md-6'
                             validate={[requiredacName]}
+                            onChange = {(e) => { getFromShortCode(this.props,e,"ac_short_code")}}
                         />
                         <Field
                             type="text"
@@ -44,6 +46,7 @@ class AmountCatalogForm extends Component {
                             name="ac_short_code" 
                             id='ac_short_code'
                             label="Short Code"  
+                            disabled='disabled'
                             component={inputField}
                             containerclass='col-md-6'
                             validate={[requiredShortCode]}

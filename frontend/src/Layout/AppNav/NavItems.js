@@ -20,11 +20,11 @@ export const ContactsNav = [
 ];
 
 export const OthersNav = [
-    {
-        icon: 'pe-7s-light',
-        label: 'Interval',
-        to: '/installment_interval/index',
-    },
+    // {
+    //     icon: 'pe-7s-light',
+    //     label: 'Interval',
+    //     to: '/installment_interval/index',
+    // },
     {
         icon: 'pe-7s-eyedropper',
         label: 'Amount Catalogue',

@@ -47,12 +47,12 @@ class CustomerGroupInsert extends Component {
 
         dispatch(resetCustomerGroupDetails());
         
-        dispatch(getCustomerDropdownRequest());
         
         if (id) {
             dispatch(getCustomerGroupDetailsRequest(id));
         }
-
+        
+        dispatch(getCustomerDropdownRequest());
         dispatch(initialize('customer_group_form', this.props.form_data));
 
         dispatch(getSelectedCustomerDropdownRequest());
@@ -83,7 +83,7 @@ class CustomerGroupInsert extends Component {
     render(){
         return (
             <div>
-                <PageTitle heading='Draw Gropu Form' />
+                <PageTitle heading='Customer Group Form' />
                 {/* <CustomerGroupForm  onSubmit={this.handleCustomerGroupInsert} {...this.props} initialValues={this.state} /> */}
                 <CustomerGroupForm  onSubmit={this.handleCustomerGroupInsert} {...this.props}  />
             </div>

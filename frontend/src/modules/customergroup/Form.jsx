@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Field, reduxForm } from 'redux-form';
 import { inputField, selectField } from "../../helpers/domcontrols";
 import { required } from "../../helpers/validators";
+import { getShortCode, getFromShortCode } from "../../helpers/system_callbacks";
 import apis from '../../api';
 import { routes } from "../../config/routes";
 import FormButtons from '../../Layout/AppFormButtons';
@@ -25,14 +26,14 @@ class CustomerGroupForm extends Component {
             selected_customer_dropdown: []
         }
     }
+    handleUpdateShortCode = (event,props) => {
+        props.change('group_short_code' ,getShortCode(event.target.value));
+    }
+
     componentDidMount(){
         this.setState({
             customer_dropdown : this.props.customer_dropdown,
         });
-    }
-    componentWillReceiveProps(props){
-        console.log(props);
-        console.log(this.state);
     }
     render() {
         const { handleSubmit } = this.props;
@@ -48,12 +49,15 @@ class CustomerGroupForm extends Component {
                             component={inputField}
                             containerclass='col-md-6'
                             validate={[requiredlName]}
+                            //onChange = {(e) => {this.handleUpdateShortCode(e,this.props)}}
+                            onChange = {(e) => { getFromShortCode(this.props,e,"group_short_code")}}
                         />
                         <Field
                             type="text"
                             name="group_short_code"
                             id='group_short_code'
                             label="Short Code"
+                            disabled='disabled'
                             component={inputField}
                             containerclass='col-md-6'
                             validate={[requiredShortCode]}
@@ -93,7 +97,8 @@ CustomerGroupForm = reduxForm({
 
 const mapStateToProps = state => {
     return {
-        customer_dropdown : state.customer.dropdown_data
+        customer_dropdown : state.customer.dropdown_data,
+        selected_customer_dropdown : state.customergroup.selected_customer_dropdown
     };
 };
 
