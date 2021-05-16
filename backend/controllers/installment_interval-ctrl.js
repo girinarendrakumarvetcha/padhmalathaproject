@@ -123,7 +123,7 @@ getInstallmentIntervalList = async (req, res) => {
         return res.status(200).json({ success: true, data: interval_data })
     }).catch(err => console.log(err))
 }
-getIntervalDrpdown = async (req, res) => {
+getIntervalDropdown = async (req, res) => {
     await Interval_master.find({}, (err, installment_interval) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
@@ -153,5 +153,5 @@ module.exports = {
     deleteInterval,
     getIntervalById,
     getInstallmentIntervalList,
-    getIntervalDrpdown
+    getIntervalDropdown
 }

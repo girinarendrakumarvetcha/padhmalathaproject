@@ -1,11 +1,12 @@
 import React, { Component , Fragment } from 'react';
-import apis from '../../api';
+import { connect } from "react-redux";
 import { routes } from "../../config/routes";
 import { formColumns } from "../../config/listingColumns";
 import CusLisToolBarBtns from "../../helpers/listingCustomToolbar";
 import ListingActionBtns from "../../Layout/AppMain/ListingActionBtns";
 import MUIDataTable from "mui-datatables";
 import { NavLink } from "react-router-dom";
+import { getDrawLogListRequest, resetDrawLogDetails } from '../../actions/drawlog';
 
 const formColumnsName = formColumns(
     {
@@ -88,13 +89,13 @@ class DrawLogList extends Component {
                             
                             <ListingActionBtns 
                               link={`${routes.DRAW_MASTER_EDIT}/${
-                                  this.state.dl_data[index.rowIndex].dl_id
+                                  this.props.list_data[index.rowIndex].dl_id
                               }`}
                               label='Edit'
                               iconlabel='fa fa-pencil'
                               onClick={() =>
                                 this.handleShowDeleteAlert([
-                                  this.state.dl_data[index.rowIndex].dl_id
+                                  this.props.list_data[index.rowIndex].dl_id
                                 ])
                               }
                             />
@@ -111,7 +112,7 @@ class DrawLogList extends Component {
                         customBodyRender: (value, index, id) => {
                           return (
                             <NavLink to={`${routes.DRAW_INVOICE_LIST_URL}/${
-                              this.state.dl_data[index.rowIndex].dl_id
+                              this.props.list_data[index.rowIndex].dl_id
                           }`}>
                               Invoices
                               </NavLink>
@@ -129,7 +130,7 @@ class DrawLogList extends Component {
                         customBodyRender: (value, index, id) => {
                           return (
                             <NavLink to={`${routes.DRAW_MASTER_TRANS_LIST_URL}/${
-                              this.state.dl_data[index.rowIndex].dl_id
+                              this.props.list_data[index.rowIndex].dl_id
                           }`}>
                               Trans
                               </NavLink>
@@ -143,7 +144,7 @@ class DrawLogList extends Component {
                 ],
                 options: {
                         filterType: "textField",
-                        responsive: "scroll",
+                        responsive: "standard",
                         rowsPerPageOptions: [10, 20, 30],
                         count: 0,
                         rowsPerPage: 10,
@@ -161,14 +162,22 @@ class DrawLogList extends Component {
     }
 
     componentDidMount = async () => {
-      await apis.getDrawList().then(draw => {
-          console.log(draw.data.data); 
-          this.setState({
-              dl_data : draw.data.data,
-          })
-      })
-    }
+    //   await apis.getDrawList().then(draw => {
+    //     console.log(draw.data.data); 
+    //     this.setState({
+    //         dl_data : draw.data.data,
+    //     })
+    // })
+      const {
+        dispatch
+      } = this.props;
+      dispatch(resetDrawLogDetails());
+      dispatch(getDrawLogListRequest()); 
+  }
 
+  // componentWillReceiveProps(props){
+  //   this.setState({'list_data' : props.list_data});
+  // }
     render() {
 
         return (
@@ -179,7 +188,7 @@ class DrawLogList extends Component {
                         title={
                           <h2>Drawlog List</h2>
                         }
-                        data={this.state.dl_data}
+                        data={this.props.list_data}
                         columns={this.state.columns}
                         options={this.state.options}
                     />
@@ -189,5 +198,14 @@ class DrawLogList extends Component {
     }
 }
 
-export default DrawLogList;
+//export default DrawLogList;
+
+const mapStateToProps = state => {
+  return {
+      list_data: state.drawlog.list_data,
+  };
+};
+
+export default connect(mapStateToProps)(DrawLogList);
+
 

@@ -68,3 +68,24 @@ export function getCustomerListFailure(error) {
     error
   };
 }
+
+export function getCustomerDropdownRequest() {
+
+  return {
+    type: customerConstants.FORM_DROPDOWN_REQUEST
+  };
+}
+
+export function getCustomerDropdownSuccess(data) {
+  return {
+    type: customerConstants.FORM_DROPDOWN_SUCCESS,
+    data
+  };
+}
+
+export function getCustomerDropdownFailure(error) {
+  return {
+    type: customerConstants.FORM_DROPDOWN_FAILURE,
+    error
+  };
+}

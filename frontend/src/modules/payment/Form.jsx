@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Field, reduxForm } from 'redux-form';
 import { inputField , dateField } from "../../helpers/domcontrols";
 import { required ,validEmail } from "../../helpers/validators";
@@ -18,8 +19,8 @@ class DrawInvoicePaymentForm extends Component {
     }
 
     componentDidMount = () => { 
-        const url_params = this.props.match.params;
-        this.props.initialize({ dip_draw_invoice: url_params.id });
+        // const url_params = this.props.match.params;
+        // this.props.initialize({ dip_draw_invoice: url_params.id });
 
         //this.props.dispatch(change('myFormName', 'anotherField', 'value'));
 
@@ -71,8 +72,18 @@ class DrawInvoicePaymentForm extends Component {
         );
     }
 };
-export default reduxForm({
-    form: 'draw_invoice_payment_form'
-  })(DrawInvoicePaymentForm);
+// export default reduxForm({
+//     form: 'draw_invoice_payment_form'
+//   })(DrawInvoicePaymentForm);
 
 
+DrawInvoicePaymentForm = reduxForm({
+    form: 'draw_invoice_payment_form',
+    enableReinitialize: true
+})(DrawInvoicePaymentForm);
+
+const mapStateToProps = state => {
+    return {};
+  };
+  
+  export default connect(mapStateToProps)(DrawInvoicePaymentForm);

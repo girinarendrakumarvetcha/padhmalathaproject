@@ -17,8 +17,8 @@ createDrawGroup = (req,res) => {
     customers_data = customers_arr.map(function(data){
         return data['value'];
     });
-    req_obj['contactIds']   = customers_data.join(',');
-    
+    //req_obj['contactIds']   = customers_data.join(',');
+    req_obj['contactIds']   = customers_data;
     const draw_group = new Draw_group(req_obj);
     if(!draw_group){
         return res.status(400).json({
@@ -27,13 +27,14 @@ createDrawGroup = (req,res) => {
         })
     }
 
-    draw_group.save(function(err,result){
+    draw_group.save(function(err,data){
         console.log(err);
         const statuscode = (err)?400:200;   
         
         return res.status(statuscode).json({
             err,
-            result,
+            data,
+            success:true,
             message: 'DrawGroup created successfully.'
         });
     });
@@ -50,24 +51,21 @@ updateDrawGroup = async (req,res) => {
         if(err){
             return res.status(400).json({err,message : 'customer not found..!'});
         }
-        
         draw_group['name']         = body.group_name;
         draw_group['shortCode']   = body.group_short_code;
-        // let customers_arr = body.group_customers_ids;
-        // let customers_data = [];
-        // customers_data = customers_arr.map(function(data){
-        //     return data['value'];
-        //});
-        //draw_group['contactIds']   = customers_data.join(',');
-        draw_group['contactIds']   = body.group_customers_ids;
-        // console.log(draw_group);
-        // return 1;
-        
-        draw_group.save(function(err,result){
+        let customers_arr = body.group_customers;
+        let customers_data = [];
+        customers_data = customers_arr.map(function(data){
+            return data['value'];
+        });
+
+        draw_group['contactIds']   = customers_data;
+        draw_group.save(function(err,data){
             const statuscode = (err)?400:200;   
             return res.status(statuscode).json({
                 err,
-                result,
+                data,
+                success:true,
                 message: 'Interval updated successfully.'
             });
         });

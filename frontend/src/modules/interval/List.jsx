@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import apis from '../../api';
+import { connect } from "react-redux";
 import { routes } from "../../config/routes";
 import { formColumns } from "../../config/listingColumns";
 import CusLisToolBarBtns from "../../helpers/listingCustomToolbar";
 import ListingActionBtns from "../../Layout/AppMain/ListingActionBtns";
 import MUIDataTable from "mui-datatables";
+import { getIntervalListRequest, resetIntervalDetails } from '../../actions/interval';
 
 const formColumnsName = formColumns(
     {
@@ -66,13 +68,13 @@ class InstallmentIntervalList extends Component {
                             
                             <ListingActionBtns 
                               link={`${routes.INTERVAL_EDIT}/${
-                                  this.state.interval_data[index.rowIndex].im_id
+                                  this.state.list_data[index.rowIndex].im_id
                               }`}
                               label='Edit'
                               iconlabel='fa fa-pencil'
                               onClick={() =>
                                 this.handleShowDeleteAlert([
-                                  this.state.interval_data[index.rowIndex].im_id
+                                  this.state.list_data[index.rowIndex].im_id
                                 ])
                               }
                             />
@@ -85,7 +87,7 @@ class InstallmentIntervalList extends Component {
                 ],
                 options: {
                         filterType: "textField",
-                        responsive: "scroll",
+                        responsive:"standard",
                         rowsPerPageOptions: [10, 20, 30],
                         count: 0,
                         rowsPerPage: 10,
@@ -107,13 +109,15 @@ class InstallmentIntervalList extends Component {
     }
 
     componentDidMount = async () => {
-      await apis.getIntervalList().then(installment_Interval => {
-          this.setState({
-                interval_data : installment_Interval.data.data,
-            })
-        })
+      const {
+        dispatch
+      } = this.props;
+        dispatch(resetIntervalDetails());
+        dispatch(getIntervalListRequest());
     }
-
+    componentWillReceiveProps(props){
+      this.setState({'list_data' : props.list_data});
+    }
     render() {
 
         return (
@@ -124,7 +128,7 @@ class InstallmentIntervalList extends Component {
                         title={
                           <h2>Interval List</h2>
                         }
-                        data={this.state.interval_data}
+                        data={this.state.list_data}
                         columns={this.state.columns}
                         options={this.state.options}
                     />
@@ -134,5 +138,12 @@ class InstallmentIntervalList extends Component {
     }
 }
 
-export default InstallmentIntervalList
+//export default InstallmentIntervalList
+const mapStateToProps = state => {
+  return {
+      list_data: state.interval.list_data,
+  };
+};
+
+export default connect(mapStateToProps)(InstallmentIntervalList);
 

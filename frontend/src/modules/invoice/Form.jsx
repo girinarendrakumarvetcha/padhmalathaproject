@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Field, reduxForm } from 'redux-form';
 import { inputField , selectField  , viewField} from "../../helpers/domcontrols";
 import { required } from "../../helpers/validators";
@@ -22,14 +23,14 @@ class DrawInvoiceForm extends Component {
     }
 
     componentDidMount = async () => {
-        const url_params = this.props.match.params;
-        if(url_params.id !== undefined){
-          await  apis.drawInvoiceRecordFetch(url_params.id).then(res => {
-            console.log(res.data.data);    
+        // const url_params = this.props.match.params;
+        // if(url_params.id !== undefined){
+        //   await  apis.drawInvoiceRecordFetch(url_params.id).then(res => {
+        //     console.log(res.data.data);    
             
-                this.props.initialize( res.data.data); 
-            });
-        }        
+        //         this.props.initialize( res.data.data); 
+        //     });
+        // }        
     }
 
     render(){
@@ -148,6 +149,16 @@ class DrawInvoiceForm extends Component {
         );
     }
 };
-export default reduxForm({
-    form: 'draw_invoice_form'
-  })(DrawInvoiceForm);
+// export default reduxForm({
+//     form: 'draw_invoice_form'
+//   })(DrawInvoiceForm);
+DrawInvoiceForm = reduxForm({
+    form: 'draw_invoice_form',
+    enableReinitialize: true
+})(DrawInvoiceForm);
+
+const mapStateToProps = state => {
+    return {};
+  };
+  
+  export default connect(mapStateToProps)(DrawInvoiceForm);

@@ -15,14 +15,14 @@ import InstallmentIntervalInsert from './interval/Insert'
 import DrawInvoiceList from './invoice/List'
 import DrawInvoiceInsert from './invoice/Insert'
 
-import DrawMasterTransList from './drawmastertrans/List'
-import DrawMasterTransInsert from './drawmastertrans/Insert'
+import DrawTransactionList from './drawtransaction/List'
+import DrawTransactionInsert from './drawtransaction/Insert'
 
 import DrawInvoicePaymentList from './payment/List'
 import DrawInvoicePaymentInsert from './payment/Insert'
 
-import DrawGroupList from './drawgroup/List'
-import DrawGroupInsert from './drawgroup/Insert'
+import CustomerGroupList from './customergroup/List'
+import CustomerGroupInsert from './customergroup/Insert'
 import DrawLogList from './drawlog/List'
 import DrawLogInsert from './drawlog/Insert'
 import SampleForm from '../pages/redux_form_sample'
@@ -36,16 +36,16 @@ const modulelist  =  {    CustomerList,
             AmountCatalogInsert,
             InstallmentIntervalList,
             InstallmentIntervalInsert,
-            DrawGroupInsert,
-            DrawGroupList,
+            CustomerGroupInsert,
+            CustomerGroupList,
             DrawLogList,
             DrawLogInsert,
             DrawInvoiceList,
             DrawInvoiceInsert,
             DrawInvoicePaymentList,
             DrawInvoicePaymentInsert,
-            DrawMasterTransList,
-            DrawMasterTransInsert
+            DrawTransactionList,
+            DrawTransactionInsert
         };
 
 export default modulelist;

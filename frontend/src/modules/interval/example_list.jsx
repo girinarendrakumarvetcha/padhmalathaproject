@@ -129,7 +129,7 @@ class Listing extends Component {
       ],
       options: {
         filterType: "textField",
-        responsive: "scroll",
+        responsive: "standard",
         rowsPerPageOptions: [10, 20, 30],
         count: 0,
         rowsPerPage: 10,

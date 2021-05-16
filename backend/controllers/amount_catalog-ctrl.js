@@ -20,14 +20,13 @@ createAmtCatalogue = (req,res) => {
             error : err
         })
     }
-    console.log(amount_catalog);
-    amount_catalog.save(function(err,result){
-        console.log(err);
+    amount_catalog.save(function(err,data){
         const statuscode = (err)?400:200;   
         return res.status(statuscode).json({
             err,
-            result,
-            message: 'Contact created successfully.'
+            data,
+            success:true,
+            message: 'Amount Catalogue created successfully.'
         });
     });
 } 
@@ -50,11 +49,12 @@ updateAmtCatalogue = async (req,res) => {
         amount_catalog.shortCode    = body.ac_short_code,
         amount_catalog.updatedBy    = 1
         amount_catalog.updatedDate  = new Date();
-        amount_catalog.save(function(err,result){
+        amount_catalog.save(function(err,data){
             const statuscode = (err)?400:200;   
             return res.status(statuscode).json({
                 err,
-                result,
+                data,
+                success:true,
                 message: 'Amount Catalogue updated successfully.'
             });
         });

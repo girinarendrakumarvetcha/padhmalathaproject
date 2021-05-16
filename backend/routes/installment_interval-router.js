@@ -9,6 +9,6 @@ router.put('/installment_interval/update/:id', IntervalCtrl.updateInterval);
 router.delete('/installment_interval/:id', IntervalCtrl.deleteInterval);
 router.get('/installment_interval/fetch/:id', IntervalCtrl.getIntervalById);
 router.get('/installment_interval_list', IntervalCtrl.getInstallmentIntervalList);
-router.get('/intervaldropdown', IntervalCtrl.getIntervalDrpdown);
+router.get('/intervaldropdown', IntervalCtrl.getIntervalDropdown);
 
 module.exports = router

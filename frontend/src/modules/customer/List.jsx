@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import apis from '../../api';
 import { routes } from "../../config/routes";
 import { formColumns } from "../../config/listingColumns";
 import CusLisToolBarBtns from "../../helpers/listingCustomToolbar";
@@ -119,7 +118,7 @@ class CustomerList extends Component {
     componentDidMount = async () => {
       const {
         dispatch
-    } = this.props;
+      } = this.props;
         // await apis.getAllCustomers().then(customer => {
         //     this.setState({
         //       customer_data : customer.data.data,
@@ -154,7 +153,6 @@ class CustomerList extends Component {
 // export default InstallmentIntervalList;
 
 const mapStateToProps = state => {
-  //console.log(state.customer);
   return {
       list_data: state.customer.list_data,
   };

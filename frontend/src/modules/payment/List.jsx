@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import apis from '../../api';
 import { routes } from "../../config/routes";
 import { formColumns } from "../../config/listingColumns";
 import CusLisToolBarBtns from "../../helpers/listingCustomToolbar";
 import ListingActionBtns from "../../Layout/AppMain/ListingActionBtns";
 import MUIDataTable from "mui-datatables";
+import { getCustomerListRequest, resetCustomerDetails } from '../../actions/customer';
 
 const formColumnsShortCode = formColumns(
   {
@@ -65,13 +67,13 @@ class DrawInvoicePaymentList extends Component {
                           
                           <ListingActionBtns 
                             link={`${routes.DRAW_INVOICE_PAYMENT_EDIT}/${
-                                this.state.dip_data[index.rowIndex].cus_id
+                                this.props.list_data[index.rowIndex].cus_id
                             }`}
                             label='Edit'
                             iconlabel='fa fa-pencil'
                             onClick={() =>
                               this.handleShowDeleteAlert([
-                                this.state.dip_data[index.rowIndex].cus_id
+                                this.props.list_data[index.rowIndex].cus_id
                               ])
                             }
                           />
@@ -84,7 +86,7 @@ class DrawInvoicePaymentList extends Component {
                 ],
                 options: {
                         filterType: "textField",
-                        responsive: "scroll",
+                        responsive: "standard",
                         rowsPerPageOptions: [10, 20, 30],
                         count: 0,
                         rowsPerPage: 10,
@@ -119,7 +121,7 @@ class DrawInvoicePaymentList extends Component {
                         title={
                           <h2>Draw Invoice Payment List</h2>
                         }
-                        data={this.state.dip_data}
+                        data={this.props.list_data}
                         columns={this.state.columns}
                         options={this.state.options}
                     />
@@ -129,5 +131,13 @@ class DrawInvoicePaymentList extends Component {
     }
 }
 
-export default DrawInvoicePaymentList;
+//export default DrawInvoicePaymentList;
 
+
+const mapStateToProps = state => {
+  return {
+      list_data: state.payment.list_data,
+  };
+};
+
+export default connect(mapStateToProps)(DrawInvoicePaymentList);

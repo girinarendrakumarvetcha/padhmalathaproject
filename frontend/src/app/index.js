@@ -31,9 +31,9 @@ function App() {
                         <Route path={`${routes.CHIT_MASTER_LIST}`} exact component={modulelist.AuctionList} />
                         <Route path={`${routes.CHIT_MASTER_ADD}`} exact component={modulelist.AuctionInsert} />
                         <Route path={`${routes.CHIT_MASTER_UPDATE}`} exact component={modulelist.AuctionInsert} />
-                        <Route path={`${routes.DRAW_GROUP_LIST}`} exact component={modulelist.DrawGroupList} />
-                        <Route path={`${routes.DRAW_GROUP_ADD}`} exact component={modulelist.DrawGroupInsert} />
-                        <Route path={`${routes.DRAW_GROUP_UPDATE}`} exact component={modulelist.DrawGroupInsert} />
+                        <Route path={`${routes.CUSTOMER_GROUP_LIST}`} exact component={modulelist.CustomerGroupList} />
+                        <Route path={`${routes.CUSTOMER_GROUP_ADD}`} exact component={modulelist.CustomerGroupInsert} />
+                        <Route path={`${routes.CUSTOMER_GROUP_UPDATE}`} exact component={modulelist.CustomerGroupInsert} />
                         <Route path={`${routes.DRAW_MASTER_LIST}`} exact component={modulelist.DrawLogList} />
                         <Route path={`${routes.DRAW_MASTER_ADD}`} exact component={modulelist.DrawLogInsert} /> 
                         <Route path={`${routes.DRAW_MASTER_UPDATE}`} exact component={modulelist.DrawLogInsert} /> 
@@ -42,7 +42,7 @@ function App() {
                         <Route path={`${routes.DRAW_INVOICE_PAYMENT_LIST}`} exact component={modulelist.DrawInvoicePaymentList} />
                         <Route path={`${routes.DRAW_INVOICE_PAYMENT_ADD_URL}`} exact component={modulelist.DrawInvoicePaymentInsert} />
                         <Route path={`${routes.DRAW_MASTER_TRANS_LIST}`} exact component={modulelist.DrawMasterTransList} />
-                        {/* <Route path={`${routes.DRAW_GROUP_ADD}`} exact component={modulelist.DrawGroupInsert} /> */}
+                        {/* <Route path={`${routes.CUSTOMER_GROUP_ADD}`} exact component={modulelist.CustomerGroupInsert} /> */}
                      </Switch>
                 </div>      
             </div>

@@ -1,15 +1,17 @@
 import React, { Component  } from 'react';
+import { connect } from "react-redux";
 import apis from '../../api';
 import { routes } from "../../config/routes";
 import { formColumns } from "../../config/listingColumns";
 import CusLisToolBarBtns from "../../helpers/listingCustomToolbar";
 import MUIDataTable from "mui-datatables";
 import ListingActionBtns from "../../Layout/AppMain/ListingActionBtns";
+import { getInvoiceListRequest, resetInvoiceDetails } from '../../actions/invoice';
 
-const formColumnsCustomerName = formColumns(
+const formColumnsInvoiceName = formColumns(
     {
       name: "di_customer",
-      label: "Customer"
+      label: "Invoice"
     },
     {
       sort: true,
@@ -36,7 +38,6 @@ const formColumnsPayableAmount = formColumns(
       filter: true
     }
   );
-
 const formColumnsPayableDate = formColumns(
     {
       name: "di_payment_date",
@@ -75,7 +76,7 @@ class DrawInvoiceList extends Component {
                 selectedRows: [],
                 list: [],
                 columns: [
-                    formColumnsCustomerName,
+                    formColumnsInvoiceName,
                     formColumnsInstallmentStep,
                     formColumnsPayableAmount   ,
                     formColumnsPayableDate,
@@ -89,13 +90,13 @@ class DrawInvoiceList extends Component {
                             
                             <ListingActionBtns 
                               link={`${routes.DRAW_INVOICE_EDIT}/${
-                                  this.state.draw_invoice[index.rowIndex].di_id
+                                  this.props.list_data[index.rowIndex].di_id
                               }`}
                               label='Edit'
                               iconlabel='fa fa-pencil'
                               onClick={() =>
                                 this.handleShowDeleteAlert([
-                                  this.state.draw_invoice[index.rowIndex].di_id
+                                  this.props.list_data[index.rowIndex].di_id
                                 ])
                               }
                             />
@@ -108,7 +109,7 @@ class DrawInvoiceList extends Component {
                 ],
                 options: {
                         filterType: "textField",
-                        responsive: "scroll",
+                        responsive: "standard",
                         rowsPerPageOptions: [10, 20, 30],
                         count: 0,
                         rowsPerPage: 10,
@@ -126,15 +127,23 @@ class DrawInvoiceList extends Component {
     }
 
     componentDidMount = async () => {
-      const url_params = this.props.match.params;
-        await apis.getDrawInvoiceList(url_params.id).then(draw_invoice => {
-          console.log(draw_invoice.data.data);  
-          this.setState({
-              draw_invoice : draw_invoice.data.data
-            })
-        })
+      // const url_params = this.props.match.params;
+      //   await apis.getDrawInvoiceList(url_params.id).then(draw_invoice => {
+      //     console.log(draw_invoice.data.data);  
+      //     this.setState({
+      //         draw_invoice : draw_invoice.data.data
+      //       })
+      //   })
+      const {
+        match: {
+            params: { id }
+          },
+          dispatch
+      } = this.props;
+        dispatch(resetInvoiceDetails());
+        dispatch(getInvoiceListRequest({id:id}));
+        
     }
-
     render() {
         return (
             <div className='container-fluid'>
@@ -143,7 +152,7 @@ class DrawInvoiceList extends Component {
                         title={
                           <h2>Draw Invoice List</h2>
                         }
-                        data={this.state.draw_invoice}
+                        data={this.props.list_data}
                         columns={this.state.columns}
                         options={this.state.options}
                     />
@@ -153,5 +162,13 @@ class DrawInvoiceList extends Component {
     }
 }
 
-export default DrawInvoiceList;
+//export default DrawInvoiceList;
 
+
+const mapStateToProps = state => {
+  return {
+      list_data: state.invoice.list_data,
+  };
+};
+
+export default connect(mapStateToProps)(DrawInvoiceList);

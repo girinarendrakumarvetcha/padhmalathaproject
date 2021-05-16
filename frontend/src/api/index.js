@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    //baseURL: 'http://localhost:8080/api',
+    baseURL: 'http://'+window.location.hostname+':8080/api',
     //baseURL: 'http://192.168.1.2:8080/api',
 })
 
@@ -15,15 +16,15 @@ const getAmtCatalogList  = () => api.get(`/amtcataloglist`);
 const insertAmtCatalog   = payload => api.post(`/amt_catalog_insert`,payload);
 const getIntervalList  = () => api.get(`/installment_interval_list`);
 const insertInterval   = payload => api.post(`/installment_interval_insert`,payload);
-const getGroupList  = () => api.get(`/draw_group_list`);
-const insertGroup   = payload => api.post(`/draw_group_insert`,payload);
-const updateGroupById   = (id,payload) => api.put(`/draw_group/update/${id}`,payload);
+const getCustomerGroupList  = () => api.get(`/draw_group_list`);
+const insertCustomerGroup   = payload => api.post(`/draw_group_insert`,payload);
+const updateCustomerGroupById   = (id,payload) => api.put(`/draw_group/update/${id}`,payload);
 const getDrawList  = () => api.get(`/drawlist`);
-const insertDraw   = payload => api.post(`/draw`,payload);
+const insertDrawLog   = payload => api.post(`/draw`,payload);
 const intervalRecordFetch    = id => api.get(`/installment_interval/fetch/${id}`);
 const amtCatalogueRecordFetch    = id => api.get(`/amt_catalog/fetch/${id}`);
 const customerRecordFetch    = id => api.get(`/customer/fetch/${id}`);
-const drawGroupRecordFetch    = id => api.get(`/draw_group/fetch/${id}`);
+const customerGroupRecordFetch    = id => api.get(`/draw_group/fetch/${id}`);
 const auctionRecordFetch    = id => api.get(`/auction/fetch/${id}`);
 const customerDropdown       = () => api.get(`/customerdrpdwn`);
 const amtCatalogueDropdown   = () => api.get(`/amtcatalogdropdown`);
@@ -40,7 +41,7 @@ const updateAuctionMasterById = (id, payload) => api.put(`/auction/update/${id}`
 const getAuctionDetailsById = (id, payload) => api.get(`/auction/fetch/${id}`, payload);
 const getDrawInvoiceById = (id, payload) => api.get(`/draw_invoice/${id}`, payload);
 const updateDrawInvoiceById = (id, payload) => api.put(`/draw_invoice/update/${id}`, payload);
-const drawMasterRecordFetch = (id) => api.get(`/draw_master/fetch/${id}`);
+const drawlogRecordFetch = (id) => api.get(`/draw_master/fetch/${id}`);
 const drawInvoiceRecordFetch = (id) => api.get(`/draw_invoice/fetch/${id}`);
 const drawInvoicePaymentList = (id) => api.get(`/draw_invoice/list/${id}`);
 const drawInvoicePaymentFetch = (id) => api.get(`/draw_invoice_payment/fetch/${id}`);
@@ -63,10 +64,10 @@ const apis = {
     insertAmtCatalog,
     getIntervalList,
     insertInterval,
-    getGroupList,
-    insertGroup,
+    getCustomerGroupList,
+    insertCustomerGroup,
     getDrawList,
-    insertDraw,
+    insertDrawLog,
     intervalRecordFetch,
     customerDropdown,
     amtCatalogueDropdown,
@@ -77,7 +78,7 @@ const apis = {
     updateAmtCatalogueById,
     amtCatalogueRecordFetch,
     customerRecordFetch ,
-    drawGroupRecordFetch,
+    customerGroupRecordFetch,
     auctionRecordFetch,
     updateAuctionMasterById,
     getAuctionDetailsById,
@@ -86,8 +87,8 @@ const apis = {
     getDrawInvoiceById,
     updateDrawInvoiceById,
     drawInvoiceRecordFetch,
-    updateGroupById,
-    drawMasterRecordFetch,
+    updateCustomerGroupById,
+    drawlogRecordFetch,
     drawInvoicePaymentList,
     drawInvoicePaymentFetch,
     insertDrawInvoicePayment,

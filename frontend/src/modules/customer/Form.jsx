@@ -13,14 +13,6 @@ const requiredPhone = required("Phone Number");
 
 
 class CustomerForm extends Component {
-    // constructor(props){
-    //     super(props); 
-    // }
-
-    // componentDidMount = () => { 
-        
-    // }
-
     render(){
         const { handleSubmit } = this.props;
         return (

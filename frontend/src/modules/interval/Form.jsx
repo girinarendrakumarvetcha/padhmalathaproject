@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Field, reduxForm } from 'redux-form';
-import apis from '../../api';
 import { inputField } from "../../helpers/domcontrols";
 import { required } from "../../helpers/validators";
 import { routes } from "../../config/routes";
@@ -11,22 +11,6 @@ const requiredShortCode = required("Short Code");
 const requiredInterval = required("Interval");
 
 class IntervalForm extends Component {
-    constructor(props){
-        super(props); 
-        this.state = {
-            interval_data : {}
-        }
-    }
-
-    componentDidMount = () => { 
-        const url_params = this.props.match.params;
-        if(url_params.id !== undefined){
-            apis.intervalRecordFetch(url_params.id).then(res => {
-                this.props.initialize( res.data.data);   
-            });
-        }
-    }
-
     render(){
         
         const { handleSubmit  } = this.props;      
@@ -43,7 +27,6 @@ class IntervalForm extends Component {
                             component={inputField}
                             containerclass='col-md-6'
                             validate={[requiredIntervalName]}
-                            //defaultValue={im_data.im_name}
                         />
                         <Field
                             type="text"
@@ -53,8 +36,6 @@ class IntervalForm extends Component {
                             component={inputField}
                             containerclass='col-md-6'
                             validate={[requiredInterval]}
-                            //defaultValue={im_data.im_interval}
-
                         />
                     </div>
                     <div className="form-row">
@@ -66,7 +47,6 @@ class IntervalForm extends Component {
                             component={inputField}
                             containerclass='col-md-6'
                             validate={[requiredShortCode]}
-                            //defaultValue={im_data.im_short_code}
                         />
                     </div>
                     <FormButtons listUrl={routes.INTERVAL_LIST}/>
@@ -77,13 +57,13 @@ class IntervalForm extends Component {
 };
 
 
-// export default reduxForm({
-//     form: 'interval_form'
-//   })(IntervalForm);
-IntervalForm =  reduxForm({
-    form: 'interval_form'
-  })(IntervalForm);
+IntervalForm = reduxForm({
+    form: 'interval_form',
+    enableReinitialize: true
+})(IntervalForm);
 
-
-
-  export default IntervalForm;
+const mapStateToProps = state => {
+    return {};
+  };
+  
+  export default connect(mapStateToProps)(IntervalForm);

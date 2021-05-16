@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { withRouter , Redirect  } from 'react-router-dom';
 import apis from '../../api';
 import { routes } from "../../config/routes";
-import DrawMasterTransForm from './Form';
+import DrawTransactionForm from './Form';
 import PageTitle from '../../Layout/AppMain/FormPageTitle';
 
-class DrawMasterTransInsert extends Component {
+class DrawTransactionInsert extends Component {
 
     handleIncludeDrawInvoicePayment = (data) => {
         const url_params = this.props.match.params;
@@ -22,9 +22,9 @@ class DrawMasterTransInsert extends Component {
         return (
             <div>
                 <PageTitle heading='Draw Master Trans Form' />
-                <DrawMasterTransForm  onSubmit={this.handleIncludeDrawInvoicePayment}   {...this.props}/>
+                <DrawTransactionForm  onSubmit={this.handleIncludeDrawInvoicePayment}   {...this.props}/>
             </div>
         );
     }
 };
-export default withRouter(DrawMasterTransInsert);
+export default withRouter(DrawTransactionInsert);

@@ -3,6 +3,7 @@ const initialState = {
     loading: false,
     form_data: [],
     list_data: [],
+    dropdown_data: [],
     error: ''
 }
 export function customer(state = initialState, action) {
@@ -36,23 +37,16 @@ export function customer(state = initialState, action) {
                 form_data: [],
                 error: ''
             };
-        
+
         case customerConstants.GET_LIST_REQUEST:
             return {
                 ...state,
                 loading: true,
-                list_data : [],
+                list_data: [],
                 error: ''
             };
         case customerConstants.GET_LIST_SUCCESS:
-         console.log({
-            ...state,
-            list_data: action.data.data,
-            loading: false,
-            error: ''
-        });
-        
-        return {
+            return {
                 ...state,
                 list_data: action.data.data,
                 loading: false,
@@ -64,7 +58,6 @@ export function customer(state = initialState, action) {
                 list_data: [],
                 error: action.error
             };
-
 
         case customerConstants.DELETE_REQUEST:
             return {
@@ -95,6 +88,29 @@ export function customer(state = initialState, action) {
                     return user;
                 })
             };
+        
+        case customerConstants.FORM_DROPDOWN_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                dropdown_data: [],
+                error: ''
+            };
+        case customerConstants.FORM_DROPDOWN_SUCCESS:
+            return {
+                ...state,
+                dropdown_data: action.data.data,
+                loading: false,
+                error: ''
+            };
+        case customerConstants.FORM_DROPDOWN_FAILURE:
+
+            return {
+                loading: false,
+                dropdown_data: [],
+                error: action.error
+            };
+        
         default:
             return state
     }

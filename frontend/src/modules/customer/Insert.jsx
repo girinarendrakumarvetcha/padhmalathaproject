@@ -10,8 +10,6 @@ import history from '../../config/history';
 import { initialize } from "redux-form";
 class CustomerInsert extends Component {
 
-
-
     handleIncludeCustomer = (data) => {
         const {
             match: {

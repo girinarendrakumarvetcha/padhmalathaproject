@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const DrawGroup = new Schema (
     {
         name        : {type: String,required :true},
-        contactIds   : {type: String,required :false},
+        contactIds   : {type: Array,required :false},
         shortCode   : {type: String,required :false},
         addedBy     : {type: Number,required :false},
         addedDate   : {type: String,required :false},

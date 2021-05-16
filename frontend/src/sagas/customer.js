@@ -28,7 +28,7 @@ function saveCustomerDetails() {
     try {
 
       const { data , id , history } = actions.payload;
-      console.log(actions);
+
       let response = {};
       if(typeof id != 'undefined' && id){
         response = yield call(() => api.updateCustomerById(id, data));
@@ -37,8 +37,8 @@ function saveCustomerDetails() {
       }
       if (response && response.data.success) {
         yield put(customerActions.saveCustomerDetailsSuccess(response.data));
-        history.push(`${routes.CUSTOMER_LIST}`);
-        //yield put(push(`${routes.CUSTOMER_LIST}`));
+        history.push(`${routes.CUSTOMER_LIST}`);   
+        window.location.reload();     
       } else {
         yield put(customerActions.saveCustomerDetailsFailure(response));
      }
@@ -64,6 +64,22 @@ function getCustomerList() {
   };
 }
 
+function getCustomerDropdown() {
+  
+  return function*(actions) {
+    try {
+      const data = yield call(() => api.customerDropdown());
+      if (data && data.data.success) {
+        yield put(customerActions.getCustomerDropdownSuccess(data.data));
+      } else {
+        yield put(customerActions.getCustomerDropdownFailure(data));
+      }
+    } catch (error) {
+      yield put(customerActions.getCustomerDropdownFailure(error));
+    }
+  };
+}
+
 
 
 function noAction(){
@@ -73,6 +89,7 @@ export function* customersWatcher() {
   yield takeLatest(customerConstants.GET_FORM_REQUEST, getCustomerDetails());
   yield takeLatest(customerConstants.SAVE_FORM_REQUEST, saveCustomerDetails());
   yield takeLatest(customerConstants.GET_LIST_REQUEST, getCustomerList());
+  yield takeLatest(customerConstants.FORM_DROPDOWN_REQUEST, getCustomerDropdown());
   // yield takeLatest(customerConstants.RESET_DETAILS, noAction());
 }
 

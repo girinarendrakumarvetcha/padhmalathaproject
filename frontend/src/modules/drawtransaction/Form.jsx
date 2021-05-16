@@ -9,7 +9,7 @@ import FormButtons from '../../Layout/AppFormButtons';
 const requiredPaymentAmount = required("Payment Amount");
 const requiredPaymentDate = required("Payment Date");
 
-class DrawMasterTransForm extends Component {
+class DrawTransactionForm extends Component {
     constructor(props){
         super(props); 
         this.state = {
@@ -73,6 +73,6 @@ class DrawMasterTransForm extends Component {
 };
 export default reduxForm({
     form: 'draw_invoice_payment_form'
-  })(DrawMasterTransForm);
+  })(DrawTransactionForm);
 
 

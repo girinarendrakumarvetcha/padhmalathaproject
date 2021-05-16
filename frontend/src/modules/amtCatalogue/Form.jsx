@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Field, reduxForm } from 'redux-form';
 import { inputField } from "../../helpers/domcontrols";
 import { required } from "../../helpers/validators";
@@ -11,22 +12,6 @@ const requiredCatAmt = required("Catalogue Amount");
 const requiredShortCode = required("Short Code");
 
 class AmountCatalogForm extends Component {
-    constructor(props){
-        super(props); 
-        this.state = {
-            amt_catalogue : []
-        }
-    }
-    
-    componentDidMount = () => { 
-        const url_params = this.props.match.params;
-        if(url_params.id !== undefined){
-            apis.amtCatalogueRecordFetch(url_params.id).then(res => {
-                this.props.initialize( res.data.data);   
-            });
-        }
-    }
-    
     render(){
         const { handleSubmit } = this.props;
         return (
@@ -70,8 +55,17 @@ class AmountCatalogForm extends Component {
         );
     }
 };
-export default reduxForm({
-    form: 'amount_catalogue_form'
-  })(AmountCatalogForm);
+
+AmountCatalogForm = reduxForm({
+    form: 'amount_catalogue_form',
+    enableReinitialize: true
+})(AmountCatalogForm);
+
+const mapStateToProps = state => {
+    return {};
+  };
+  
+  export default connect(mapStateToProps)(AmountCatalogForm);
+
 
 

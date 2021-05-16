@@ -1,9 +1,9 @@
 
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Field, initialize, reduxForm } from 'redux-form';
 import { inputField , selectField,selectDropdown } from "../../helpers/domcontrols";
 import { required } from "../../helpers/validators";
-import apis from '../../api';
 import { routes } from "../../config/routes";
 import FormButtons from '../../Layout/AppFormButtons';
 
@@ -84,70 +84,70 @@ class AuctionForm extends Component {
     
     componentDidMount = async () => {
         
-        let amt_catalog_data = {};
-        let sel_interval_dropdown = {};
-        let interval_dropdown_arr = [];
-        await apis.amtCatalogueDropdown().then(amt_catalog_dropdown => {    
-            // this.setState({
-            //     amt_catalog_data : amt_catalog_dropdown.data.data,
-            // });
-            amt_catalog_data = amt_catalog_dropdown.data.data;
-        });
+        // let amt_catalog_data = {};
+        // let sel_interval_dropdown = {};
+        // let interval_dropdown_arr = [];
+        // await apis.amtCatalogueDropdown().then(amt_catalog_dropdown => {    
+        //     // this.setState({
+        //     //     amt_catalog_data : amt_catalog_dropdown.data.data,
+        //     // });
+        //     amt_catalog_data = amt_catalog_dropdown.data.data;
+        // });
 
-        await apis.intervalDropdown().then(interval_dropdown => {
-            // this.setState({
-            //     interval_dropdown : interval_dropdown.data.data,
-            // })
-            interval_dropdown_arr = interval_dropdown.data.data;
-        });
+        // await apis.intervalDropdown().then(interval_dropdown => {
+        //     // this.setState({
+        //     //     interval_dropdown : interval_dropdown.data.data,
+        //     // })
+        //     interval_dropdown_arr = interval_dropdown.data.data;
+        // });
 
-        const url_params = this.props.match.params;
-        if(url_params.id !== undefined){
-          await  apis.auctionRecordFetch(url_params.id).then(res => {
-                this.setState({
-                    trans_arr : res.data.data.trans_arr
-                });  
+        // const url_params = this.props.match.params;
+        // if(url_params.id !== undefined){
+        //   await  apis.auctionRecordFetch(url_params.id).then(res => {
+        //         this.setState({
+        //             trans_arr : res.data.data.trans_arr
+        //         });  
               
-                let auction_form_data = res.data.data;
-                //this.props.initialize( res.data.data);  
-                var sel_amt_catalog_dropdown = '';
-                //var amt_catalog_data = this.state.amt_catalog_data;
-                for(var i in amt_catalog_data){
-                    if(amt_catalog_data[i]['value'] == res.data.data.ma_amt_catalog_id){
-                        sel_amt_catalog_dropdown = amt_catalog_data[i];
-                    }
-                }
-                for(var i in interval_dropdown_arr){
-                    if(interval_dropdown_arr[i]['value'] == res.data.data.ma_interval_cycle){
-                        sel_interval_dropdown = interval_dropdown_arr[i];
-                    }
-                }
-                auction_form_data['ma_amt_catalog'] = sel_amt_catalog_dropdown;
-                //debugger;
-                this.props.dispatch(initialize("auction_form", auction_form_data))   
-                //this.setState({sel_amt_catalog_dropdown : sel_amt_catalog_dropdown}); 
-                // setTimeout(
-                //     () => this.setState({
-                //         amt_catalog_dropdown : this.state.amt_catalog_data,
-                //         sel_amt_catalog_dropdown : sel_amt_catalog_dropdown
-                //     }), 
-                //     1000
-                //   );
-                console.log(interval_dropdown_arr)
-                this.setState({
-                    sel_amt_catalog_dropdown : sel_amt_catalog_dropdown,
-                    sel_interval_dropdown : sel_interval_dropdown,
-                    amt_catalog_dropdown : amt_catalog_data,
-                    interval_dropdown : interval_dropdown_arr
-                })
-            });
-        }
-        else{
-            this.setState({
-                amt_catalog_dropdown : amt_catalog_data,
-                interval_dropdown : interval_dropdown_arr
-            })
-        }
+        //         let auction_form_data = res.data.data;
+        //         //this.props.initialize( res.data.data);  
+        //         var sel_amt_catalog_dropdown = '';
+        //         //var amt_catalog_data = this.state.amt_catalog_data;
+        //         for(var i in amt_catalog_data){
+        //             if(amt_catalog_data[i]['value'] == res.data.data.ma_amt_catalog_id){
+        //                 sel_amt_catalog_dropdown = amt_catalog_data[i];
+        //             }
+        //         }
+        //         for(var i in interval_dropdown_arr){
+        //             if(interval_dropdown_arr[i]['value'] == res.data.data.ma_interval_cycle){
+        //                 sel_interval_dropdown = interval_dropdown_arr[i];
+        //             }
+        //         }
+        //         auction_form_data['ma_amt_catalog'] = sel_amt_catalog_dropdown;
+        //         //debugger;
+        //         this.props.dispatch(initialize("auction_form", auction_form_data))   
+        //         //this.setState({sel_amt_catalog_dropdown : sel_amt_catalog_dropdown}); 
+        //         // setTimeout(
+        //         //     () => this.setState({
+        //         //         amt_catalog_dropdown : this.state.amt_catalog_data,
+        //         //         sel_amt_catalog_dropdown : sel_amt_catalog_dropdown
+        //         //     }), 
+        //         //     1000
+        //         //   );
+        //         console.log(interval_dropdown_arr)
+        //         this.setState({
+        //             sel_amt_catalog_dropdown : sel_amt_catalog_dropdown,
+        //             sel_interval_dropdown : sel_interval_dropdown,
+        //             amt_catalog_dropdown : amt_catalog_data,
+        //             interval_dropdown : interval_dropdown_arr
+        //         })
+        //     });
+        // }
+        // else{
+        //     this.setState({
+        //         amt_catalog_dropdown : amt_catalog_data,
+        //         interval_dropdown : interval_dropdown_arr
+        //     })
+        // }
         
     }
     handleInstallmentsChange = (event) => {
@@ -198,31 +198,44 @@ class AuctionForm extends Component {
                             containerclass='col-md-4'
                             validate={[requiredShortCode]}
                         />
+                        
                         <Field
                             type="text"
                             name="ma_status" 
                             id='ma_status'
-                            label="Status"  
-                            component={inputField}
-                            containerclass='col-md-4'
-                        />
-                        {this.state.amt_catalog_dropdown.length && 
-
-                        <Field
-                            type="text"
-                            name="ma_amt_catalog" 
-                            id='ma_amt_catalog'
-                            label="Amount Catalougue"  
+                            label="Status"
                             component={selectField} 
                             containerclass='col-md-4'
-                            defaultValue={JSON.stringify(this.state.sel_amt_catalog_dropdown)} 
-                            data={JSON.stringify(this.state.amt_catalog_dropdown)}
-                            // defaultValue= {JSON.stringify({'value': '5fc22a3aa629931ccc45661d', 'amount': 100000, 'label': '1 Lakh Catalogue'})}
-                            // data = {JSON.stringify([{"value":"5f9ecd79be78dd56edac6dd8","amount":50000,"label":"50 Thousand"},{"value":"5fc22a20a629931ccc45661c","amount":200000,"label":"2 Lakh"},{"value":"5fc22a3aa629931ccc45661d","amount":100000,"label":"1 Lakh Catalogue"},{"value":"5fe7ebe5f9219400d852f702","amount":300000,"label":"3 Lakhs"}])}
+                            //defaultValue={JSON.stringify(this.state.sel_amt_catalog_dropdown)} 
+                            data={JSON.stringify(this.props.record_status)}
                             validate={[requiredAmountCatalogue]}
-                            onChange = {(e) => this.updateAmountCatalogue(e, this.props)}
                             />
-                        }
+                            {(this.props.amt_catalog_dropdown.length > 0 ) && 
+                               <Field
+                                    type="text"
+                                    name="ma_amt_catalog" 
+                                    id='ma_amt_catalog'
+                                    label="Amount Catalougue"  
+                                    component={selectField} 
+                                    containerclass='col-md-4'
+                                    defaultValue={JSON.stringify(this.props.sel_amt_catalog_dropdown)} 
+                                    data={JSON.stringify(this.props.amt_catalog_dropdown)}
+                                    validate={[requiredAmountCatalogue]}
+                                    onChange = {(e) => this.updateAmountCatalogue(e, this.props)}
+                                />
+                            } 
+                            {/* <Field
+                                type="text"
+                                name="ma_amt_catalog" 
+                                id='ma_amt_catalog'
+                                label="Amount Catalougue"  
+                                component={selectField} 
+                                containerclass='col-md-4'
+                                defaultValue={JSON.stringify(this.props.sel_amt_catalog_dropdown)} 
+                                data={JSON.stringify(this.props.amt_catalog_dropdown)}
+                                validate={[requiredAmountCatalogue]}
+                                onChange = {(e) => this.updateAmountCatalogue(e, this.props)}
+                            /> */}
                     </div>
                     <div className="form-row">
                         <Field
@@ -235,19 +248,17 @@ class AuctionForm extends Component {
                             validate={[requiredInstallments]}
                             onChange = {this.handleInstallmentsChange}
                         />
-                        { this.state.interval_dropdown.length && 
                         <Field
                             type="text"
                             name="ma_interval_period" 
                             id='ma_interval_period'
                             label="Interval"  
                             component={selectField}
-                            defaultValue={JSON.stringify(this.state.sel_interval_dropdown)}
-                            data={JSON.stringify(this.state.interval_dropdown)}
+                            defaultValue={JSON.stringify(this.props.sel_interval_period)}
+                            data={JSON.stringify(this.props.interval_period)}
                             containerclass='col-md-4'
                             validate={[requiredInterval]}
-                        />  
-                        }
+                        />
                     </div>
                     <div className="form-row">
                         <Field
@@ -307,7 +318,7 @@ class AuctionForm extends Component {
                             validate={[requiredTotalAmount]}
                         />
                     </div>
-                    {this.state.trans_arr.length > 0 && 
+                    {this.props.trans_arr.length > 0 && 
                         <div className="form-row"> 
                         <h2>Details</h2>
                         <table className='table table-bordered'>
@@ -319,7 +330,7 @@ class AuctionForm extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                            {this.state.trans_arr.map((val,index) => (
+                            {this.props.trans_arr.map((val,index) => (
                                 
                                 <TrComponent  rowId={index} index={index} key={index}  />
                                 ))}
@@ -333,6 +344,28 @@ class AuctionForm extends Component {
         );
     }
 };
-export default reduxForm({
-    form: 'auction_form'
-  })(AuctionForm);
+
+
+
+// export default reduxForm({
+//     form: 'auction_form'
+//   })(AuctionForm);
+
+AuctionForm = reduxForm({
+    form: 'auction_form',
+    enableReinitialize: true
+})(AuctionForm);
+
+const mapStateToProps = state => {
+    return {
+        record_status : state.customdropdown.record_status,
+        amt_catalog_dropdown : state.amtcatalogue.dropdown_data,
+        trans_arr : state.auction.trans_data,
+        sel_amt_catalog_dropdown : state.auction.sel_amt_catalog_dropdown,
+        sel_interval_period  : state.auction.sel_interval_period, 
+        interval_period : state.customdropdown.interval_period,
+    };
+};
+  
+export default connect(mapStateToProps)(AuctionForm);
+

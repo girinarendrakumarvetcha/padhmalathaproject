@@ -14,8 +14,8 @@ export const ContactsNav = [
     },
     {
         icon: 'pe-7s-display2',
-        label: 'Draw Group',
-        to: '/draw_group/index',
+        label: 'Customer Group',
+        to: '/customer_group/index',
     }
 ];
 

@@ -58,7 +58,7 @@ const formColumnsPayableAmount = formColumns(
   }
 );
 
-class DrawInvoicePaymentList extends Component {
+class DrawTransactionList extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -107,7 +107,7 @@ class DrawInvoicePaymentList extends Component {
                 ],
                 options: {
                         filterType: "textField",
-                        responsive: "scroll",
+                        responsive: "standard",
                         rowsPerPageOptions: [10, 20, 30],
                         count: 0,
                         rowsPerPage: 10,
@@ -153,5 +153,5 @@ class DrawInvoicePaymentList extends Component {
     }
 }
 
-export default DrawInvoicePaymentList;
+export default DrawTransactionList;
 

@@ -4,6 +4,7 @@ import rootReducer from "../reducers";
 import { reducer as form } from 'redux-form';
 import rootSaga from "../sagas";
 import { combineReducers } from "redux";
+import { logger } from 'redux-logger'
 import { composeWithDevTools } from "redux-devtools-extension";
 
 export default function configureStore() {
@@ -15,7 +16,8 @@ export default function configureStore() {
       combineReducers({
         ...rootReducer,form
       }),
-      composeEnhancers(applyMiddleware(sagaMiddleware))
+      composeEnhancers(applyMiddleware(sagaMiddleware,logger))
+      //composeEnhancers(applyMiddleware(sagaMiddleware))
     );
   } else {
     store = createStore(rootReducer, applyMiddleware(sagaMiddleware));

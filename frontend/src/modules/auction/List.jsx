@@ -1,11 +1,11 @@
 import React, { Component  } from 'react';
-import apis from '../../api';
+import { connect } from "react-redux";
 import { routes } from "../../config/routes";
 import { formColumns } from "../../config/listingColumns";
 import CusLisToolBarBtns from "../../helpers/listingCustomToolbar";
 import MUIDataTable from "mui-datatables";
 import ListingActionBtns from "../../Layout/AppMain/ListingActionBtns";
-
+import { getAuctionListRequest, resetAuctionDetails } from '../../actions/auction';
 const formColumnsName = formColumns(
     {
       name: "ma_name",
@@ -36,7 +36,6 @@ const formColumnsShortCode = formColumns(
       filter: true
     }
   );
-
 const formColumnsAmount = formColumns(
     {
       name: "ma_amount",
@@ -49,7 +48,7 @@ const formColumnsAmount = formColumns(
   );
 
 
-class InstallmentIntervalList extends Component {
+class AuctionList extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -78,13 +77,13 @@ class InstallmentIntervalList extends Component {
                             
                             <ListingActionBtns 
                               link={`${routes.CHIT_MASTER_EDIT}/${
-                                  this.state.auction_data[index.rowIndex].ma_id
+                                  this.state.list_data[index.rowIndex].ma_id
                               }`}
                               label='Edit'
                               iconlabel='fa fa-pencil'
                               onClick={() =>
                                 this.handleShowDeleteAlert([
-                                  this.state.auction_data[index.rowIndex].ma_id
+                                  this.state.list_data[index.rowIndex].ma_id
                                 ])
                               }
                             />
@@ -97,7 +96,7 @@ class InstallmentIntervalList extends Component {
                 ],
                 options: {
                         filterType: "textField",
-                        responsive: "scroll",
+                        responsive: "standard",
                         rowsPerPageOptions: [10, 20, 30],
                         count: 0,
                         rowsPerPage: 10,
@@ -115,11 +114,19 @@ class InstallmentIntervalList extends Component {
     }
 
     componentDidMount = async () => {
-        await apis.getAuctionList().then(auction => {
-            this.setState({
-                auction_data : auction.data.data
-            })
-        })
+        // await apis.getAuctionList().then(auction => {
+        //     this.setState({
+        //         auction_data : auction.data.data
+        //     })
+        // })
+        const {
+          dispatch
+        } = this.props;
+        dispatch(resetAuctionDetails());
+        dispatch(getAuctionListRequest()); 
+    }
+    componentWillReceiveProps(props){
+      this.setState({'list_data' : props.list_data});
     }
 
     render() {
@@ -131,7 +138,7 @@ class InstallmentIntervalList extends Component {
                         title={
                           <h2>Auction List</h2>
                         }
-                        data={this.state.auction_data}
+                        data={this.state.list_data}
                         columns={this.state.columns}
                         options={this.state.options}
                     />
@@ -141,5 +148,12 @@ class InstallmentIntervalList extends Component {
     }
 }
 
-export default InstallmentIntervalList
+//export default AuctionList
+const mapStateToProps = state => {
+  return {
+      list_data: state.auction.list_data,
+  };
+};
+
+export default connect(mapStateToProps)(AuctionList);
 

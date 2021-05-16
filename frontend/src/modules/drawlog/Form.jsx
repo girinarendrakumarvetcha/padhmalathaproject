@@ -1,12 +1,13 @@
 
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Field, initialize, reduxForm } from 'redux-form';
 import { inputField, selectField, dateField } from "../../helpers/domcontrols";
 import { required } from "../../helpers/validators";
 import apis from '../../api';
  import { routes } from "../../config/routes";
 import FormButtons from '../../Layout/AppFormButtons';
-import axios from 'axios';
+
 
 const requiredName = required("Draw Name");
 const requiredPrintName = required("Print Name");
@@ -100,8 +101,8 @@ class DrawLogForm extends Component {
     
     handleChangeAuction = async(event,props) => {
         
-        
-        if(!(event != null))
+
+        if((event != null))
         await  apis.getAuctionDetailsById(event.value).then(res => {
             
             console.log(res.data.data);
@@ -129,94 +130,94 @@ class DrawLogForm extends Component {
     }
 
     componentDidMount = async () => {
-        let amt_catalog_dropdown_arr = [];
-        let draw_group_dropdown_arr = [];
-        let interval_dropdown_arr = [];
-        let auction_dropdown_arr = [];
-        let sel_draw_group_dropdown = {};
-        let sel_auction_dropdown = {};
-        let sel_amt_catalog_dropdown = {};
-        let sel_interval_dropdown = {};
+        // let amt_catalog_dropdown_arr = [];
+        // let draw_group_dropdown_arr = [];
+        // let interval_dropdown_arr = [];
+        // let auction_dropdown_arr = [];
+        // let sel_draw_group_dropdown = {};
+        // let sel_auction_dropdown = {};
+        // let sel_amt_catalog_dropdown = {};
+        // let sel_interval_dropdown = {};
 
-        await apis.amtCatalogueDropdown().then(amt_catalog_dropdown => {
-            amt_catalog_dropdown_arr = amt_catalog_dropdown.data.data;
-        });
-        await apis.drawGroupDropdown().then(draw_group_dropdown => {
-            draw_group_dropdown_arr = draw_group_dropdown.data.data;
-        });
-        await apis.intervalDropdown().then(interval_dropdown => {
-            interval_dropdown_arr = interval_dropdown.data.data;
-        });
-        await apis.auctionDropdown().then(auction_dropdown => {
-            auction_dropdown_arr = auction_dropdown.data.data;
-        });
+        // await apis.amtCatalogueDropdown().then(amt_catalog_dropdown => {
+        //     amt_catalog_dropdown_arr = amt_catalog_dropdown.data.data;
+        // });
+        // await apis.drawGroupDropdown().then(draw_group_dropdown => {
+        //     draw_group_dropdown_arr = draw_group_dropdown.data.data;
+        // });
+        // await apis.intervalDropdown().then(interval_dropdown => {
+        //     interval_dropdown_arr = interval_dropdown.data.data;
+        // });
+        // await apis.auctionDropdown().then(auction_dropdown => {
+        //     auction_dropdown_arr = auction_dropdown.data.data;
+        // });
         
-        const url_params = this.props.match.params;
-        if(url_params.id !== undefined){
-          await  apis.drawMasterRecordFetch(url_params.id).then(res => {
-            console.log(res.data.data);    
-            this.setState({
-                trans_arr : res.data.data.trans_arr
-            });
-            let auction_form_data = res.data.data;
-            //this.props.initialize( res.data.data);  
+        // const url_params = this.props.match.params;
+        // if(url_params.id !== undefined){
+        //   await  apis.drawMasterRecordFetch(url_params.id).then(res => {
+        //     console.log(res.data.data);    
+        //     this.setState({
+        //         trans_arr : res.data.data.trans_arr
+        //     });
+        //     let auction_form_data = res.data.data;
+        //     //this.props.initialize( res.data.data);  
             
-            var sel_amt_catalog_dropdown = '';
-            var amt_catalog_data = amt_catalog_dropdown_arr;
-            for(var i in draw_group_dropdown_arr){
-                if(draw_group_dropdown_arr[i]['value'] == res.data.data.dl_draw_group){
-                    sel_draw_group_dropdown = draw_group_dropdown_arr[i];
-                }
-            }
+        //     var sel_amt_catalog_dropdown = '';
+        //     var amt_catalog_data = amt_catalog_dropdown_arr;
+        //     for(var i in draw_group_dropdown_arr){
+        //         if(draw_group_dropdown_arr[i]['value'] == res.data.data.dl_draw_group){
+        //             sel_draw_group_dropdown = draw_group_dropdown_arr[i];
+        //         }
+        //     }
             
-            for(var i in auction_dropdown_arr){
-                if(auction_dropdown_arr[i]['value'] == res.data.data.dl_auction_master){
-                    sel_auction_dropdown = auction_dropdown_arr[i];
-                }
-            }
+        //     for(var i in auction_dropdown_arr){
+        //         if(auction_dropdown_arr[i]['value'] == res.data.data.dl_auction_master){
+        //             sel_auction_dropdown = auction_dropdown_arr[i];
+        //         }
+        //     }
             
             
-            for(var i in amt_catalog_data){
-                if(amt_catalog_data[i]['value'] == res.data.data.dl_amt_catalog_id){
-                    sel_amt_catalog_dropdown = amt_catalog_data[i];
-                }
-            }
+        //     for(var i in amt_catalog_data){
+        //         if(amt_catalog_data[i]['value'] == res.data.data.dl_amt_catalog_id){
+        //             sel_amt_catalog_dropdown = amt_catalog_data[i];
+        //         }
+        //     }
 
-            for(var i in interval_dropdown_arr){
-                if(interval_dropdown_arr[i]['value'] == res.data.data.dl_interval_cycle){
-                    sel_interval_dropdown = interval_dropdown_arr[i];
-                }
-            }
+        //     for(var i in interval_dropdown_arr){
+        //         if(interval_dropdown_arr[i]['value'] == res.data.data.dl_interval_cycle){
+        //             sel_interval_dropdown = interval_dropdown_arr[i];
+        //         }
+        //     }
 
-            auction_form_data['dl_amt_catalog'] = sel_amt_catalog_dropdown;
-            this.props.dispatch(initialize("draw_log_forms", auction_form_data))   
-            // setTimeout(
-            //     () => this.setState({
-            //         amt_catalog_dropdown : this.state.amt_catalog_data,
-            //     }), 
-            //     1000
-            //     );
-                this.setState({
-                    sel_draw_group_dropdown : sel_draw_group_dropdown,
-                    sel_auction_dropdown : sel_auction_dropdown,
-                    sel_amt_catalog_dropdown : sel_amt_catalog_dropdown,
-                    sel_interval_dropdown : sel_interval_dropdown,
-                    amt_catalog_dropdown : amt_catalog_dropdown_arr,
-                    draw_group_dropdown  : draw_group_dropdown_arr,
-                    interval_dropdown   : interval_dropdown_arr,
-                    auction_dropdown    : auction_dropdown_arr
-                });
+        //     auction_form_data['dl_amt_catalog'] = sel_amt_catalog_dropdown;
+        //     this.props.dispatch(initialize("draw_log_forms", auction_form_data))   
+        //     // setTimeout(
+        //     //     () => this.setState({
+        //     //         amt_catalog_dropdown : this.state.amt_catalog_data,
+        //     //     }), 
+        //     //     1000
+        //     //     );
+        //         this.setState({
+        //             sel_draw_group_dropdown : sel_draw_group_dropdown,
+        //             sel_auction_dropdown : sel_auction_dropdown,
+        //             sel_amt_catalog_dropdown : sel_amt_catalog_dropdown,
+        //             sel_interval_dropdown : sel_interval_dropdown,
+        //             amt_catalog_dropdown : amt_catalog_dropdown_arr,
+        //             draw_group_dropdown  : draw_group_dropdown_arr,
+        //             interval_dropdown   : interval_dropdown_arr,
+        //             auction_dropdown    : auction_dropdown_arr
+        //         });
             
-            });
-        }
-        else {
-            this.setState({
-                amt_catalog_dropdown : amt_catalog_dropdown_arr,
-                draw_group_dropdown  : draw_group_dropdown_arr,
-                interval_dropdown   : interval_dropdown_arr,
-                auction_dropdown    : auction_dropdown_arr
-            });
-        }
+        //     });
+        // }
+        // else {
+        //     this.setState({
+        //         amt_catalog_dropdown : amt_catalog_dropdown_arr,
+        //         draw_group_dropdown  : draw_group_dropdown_arr,
+        //         interval_dropdown   : interval_dropdown_arr,
+        //         auction_dropdown    : auction_dropdown_arr
+        //     });
+        // }
     }
     
     render(){
@@ -255,7 +256,7 @@ class DrawLogForm extends Component {
                         />
                     </div>
                     <div className="form-row">
-                        { this.state.draw_group_dropdown.length && 
+                        { this.props.draw_group_dropdown.length && 
                         <Field
                             type="text"
                             name="dl_draw_group" 
@@ -263,7 +264,7 @@ class DrawLogForm extends Component {
                             label="Draw Group"  
                             component={selectField}
                             defaultValue={JSON.stringify(this.state.sel_draw_group_dropdown)}
-                            data={JSON.stringify(this.state.draw_group_dropdown)}
+                            data={JSON.stringify(this.props.draw_group_dropdown)}
                             containerclass='col-md-4'
                             validate={[requiredDrawGroup]}
                         />
@@ -277,7 +278,7 @@ class DrawLogForm extends Component {
                             containerclass='col-md-4'
                             validate={[requiredDrawDate]}
                         />
-                        { this.state.auction_dropdown.length > 0  &&
+                        { this.props.auction_dropdown.length > 0  &&
                           <Field
                             type="text"
                             name="dl_auction_master" 
@@ -285,7 +286,7 @@ class DrawLogForm extends Component {
                             label="Auction Master"  
                             component={selectField}
                             defaultValue = {JSON.stringify(this.state.sel_auction_dropdown)}
-                            data={JSON.stringify(this.state.auction_dropdown)}
+                            data={JSON.stringify(this.props.auction_dropdown)}
                             containerclass='col-md-4'
                             validate={[requiredAuctionMaster]}
                             onChange = { (e) => {this.handleChangeAuction(e,this.props)}}
@@ -312,7 +313,7 @@ class DrawLogForm extends Component {
                             containerclass='col-md-4'
                             validate={[requiredDrawAmount]}
                         />
-                        { this.state.amt_catalog_dropdown.length && 
+                        { this.props.amt_catalog_dropdown.length && 
                         <Field
                             type="text"
                             name="dl_amt_catalog" 
@@ -320,7 +321,7 @@ class DrawLogForm extends Component {
                             label="Amount Catalougue"  
                             component={selectField}
                             defaultValue={JSON.stringify(this.state.sel_amt_catalog_dropdown)}
-                            data={JSON.stringify(this.state.amt_catalog_dropdown)}
+                            data={JSON.stringify(this.props.amt_catalog_dropdown)}
                             containerclass='col-md-4'
                             validate={[requiredAmountCatalogue]}
                         />
@@ -441,6 +442,28 @@ class DrawLogForm extends Component {
             );
         }
 };
-export default reduxForm({
-    form: 'draw_log_forms'
-  })(DrawLogForm);
+// export default reduxForm({
+//     form: 'draw_log_forms'
+//   })(DrawLogForm);
+
+
+DrawLogForm = reduxForm({
+    form: 'draw_log_forms',
+    enableReinitialize: true
+})(DrawLogForm);
+
+const mapStateToProps = state => {
+    
+    return {
+        record_status : state.customdropdown.record_status,
+        amt_catalog_dropdown : state.amtcatalogue.dropdown_data,
+        auction_dropdown : state.auction.dropdown_data,
+        draw_group_dropdown : state.customergroup.dropdown_data,
+        trans_arr : state.auction.trans_data,
+        sel_amt_catalog_dropdown : state.drawlog.sel_amt_catalog_dropdown,
+        sel_interval_period  : state.drawlog.sel_interval_period, 
+        interval_period : state.customdropdown.interval_period,
+    };
+};
+  
+export default connect(mapStateToProps)(DrawLogForm);

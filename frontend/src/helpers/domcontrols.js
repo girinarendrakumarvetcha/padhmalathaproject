@@ -176,6 +176,8 @@ export const selectField = props => {
 
 //   console.log(props.data);  
 // }
+if(props.id == 'ma_interval_period')
+  console.log(props);
 let default_value = {};
 
 if(typeof(props.defaultValue) != "undefined" && props.defaultValue != ''){

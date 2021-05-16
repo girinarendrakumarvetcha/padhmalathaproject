@@ -1,11 +1,12 @@
 import React, { Component  } from 'react';
+import { connect } from "react-redux";
 import apis from '../../api';
 import { routes } from "../../config/routes";
 import { formColumns } from "../../config/listingColumns";
 import CusLisToolBarBtns from "../../helpers/listingCustomToolbar";
 import ListingActionBtns from "../../Layout/AppMain/ListingActionBtns";
 import MUIDataTable from "mui-datatables";
-
+import { getCustomerGroupListRequest, resetCustomerGroupDetails } from '../../actions/customergroup';
 const formColumnsName = formColumns(
     {
       name: "dg_name",
@@ -29,7 +30,7 @@ const formColumnsShortCode = formColumns(
   );
 
 
-class DrawGroupList extends Component {
+class CustomerGroupList extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -53,16 +54,15 @@ class DrawGroupList extends Component {
                       options: {
                         customBodyRender: (value, index, id) => {
                           return (
-                            
                             <ListingActionBtns 
-                              link={`${routes.DRAW_GROUP_EDIT}/${
-                                  this.state.draw_group[index.rowIndex].dg_id
+                              link={`${routes.CUSTOMER_GROUP_EDIT}/${
+                                  this.state.list_data[index.rowIndex].dg_id
                               }`}
                               label='Edit'
                               iconlabel='fa fa-pencil'
                               onClick={() =>
                                 this.handleShowDeleteAlert([
-                                  this.state.draw_group[index.rowIndex].dg_id
+                                  this.state.list_data[index.rowIndex].dg_id
                                 ])
                               }
                             />
@@ -75,7 +75,7 @@ class DrawGroupList extends Component {
                 ],
                 options: {
                         filterType: "textField",
-                        responsive: "scroll",
+                        responsive: "standard",
                         rowsPerPageOptions: [10, 20, 30],
                         count: 0,
                         rowsPerPage: 10,
@@ -85,7 +85,7 @@ class DrawGroupList extends Component {
                         filter: false,
                         customToolbar: () => {
                           return (
-                            <CusLisToolBarBtns addLink={`${routes.DRAW_GROUP_ADD}`} />
+                            <CusLisToolBarBtns addLink={`${routes.CUSTOMER_GROUP_ADD}`} />
                           );
                         }
                     }
@@ -93,13 +93,16 @@ class DrawGroupList extends Component {
     }
 
     componentDidMount = async () => {
-        await apis.getGroupList().then(draw_group => {
-            this.setState({
-                draw_group : draw_group.data.data,
-            })
-        })
+      const {
+        dispatch
+      } = this.props;
+        dispatch(resetCustomerGroupDetails());
+        dispatch(getCustomerGroupListRequest());
+        
     }
-
+    componentWillReceiveProps(props){
+      this.setState({'list_data' : props.list_data});
+    }
     render() {
 
         return (
@@ -108,9 +111,9 @@ class DrawGroupList extends Component {
                 <div className={"container-fluid"}>
                     <MUIDataTable
                         title={
-                          <h2>Draw Group List</h2>
+                          <h2>Customer Group List</h2>
                         }
-                        data={this.state.draw_group}
+                        data={this.state.list_data}
                         columns={this.state.columns}
                         options={this.state.options}
                     />
@@ -120,5 +123,12 @@ class DrawGroupList extends Component {
     }
 }
 
-export default DrawGroupList;
+//export default CustomerGroupList;
 
+const mapStateToProps = state => {
+  return {
+      list_data: state.customergroup.list_data,
+  };
+};
+
+export default connect(mapStateToProps)(CustomerGroupList);

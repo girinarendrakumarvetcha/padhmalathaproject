@@ -1,0 +1,147 @@
+db.getCollection("draw_group").aggregate({
+    "$addFields": {
+        "contact_master_ids": {
+            "$split": ["$contactIds", ","]
+        }
+    }
+}, {
+    $lookup: 
+    {
+        from: "contact_master",
+        let: {
+            "contact_master_id": "$_id"
+        },
+        pipeline: [
+            {
+                "$addFields": {
+                    "contact_master_id": {
+                        $toObjectId: "$contact_master_id"
+                    }
+                }
+            },
+            {
+                "$match": {
+                    "contact_master_id": {
+                        $in: "$$contact_master_ids"
+                    }
+                }
+            }
+        ],
+        as: "customer_details"
+    }
+})
+
+
+
+
+db.getCollection("draw_group").aggregate([
+    {
+        $unwind: "$contactIds"
+    },
+		 {
+    "$project": {
+      "contactIds": {
+        "$toObjectId": "$contactIds"
+      }
+    }
+  },
+    {
+        $lookup: {
+            from: "contact_master",
+            localField: 'contactIds',
+            foreignField: "_id",
+            as: "contact_details"
+        }
+    }
+])
+
+
+
+db.getCollection("draw_group").aggregate([
+    {
+        $unwind: "$contactIds"
+    },
+    {
+        "$project": {
+            "contactIds": {
+                "$toObjectId": "$contactIds"
+            }
+        }
+    },
+    {
+        $lookup: {
+            from: "contact_master",
+            localField: 'contactIds',
+            foreignField: "_id",
+            as: "contact_details"
+        }
+    },
+    {
+        $group: {
+            _id : "$_id",
+						"customer_details": {
+                $addToSet: "$contact_details
+            }
+        }
+    }
+])
+
+
+
+db.getCollection("draw_group").aggregate([
+    {
+        $unwind: "$contactIds"
+    },
+    {
+        "$project": {
+            "contactIds": {
+                "$toObjectId": "$contactIds"
+            }
+        }
+    },
+    {
+        $lookup: {
+            from: "contact_master",
+            localField: 'contactIds',
+            foreignField: "_id",
+            as: "contact_details"
+        }
+    },
+    {
+        $group: {
+            _id : "$_id",
+						"customer_details": {
+                $addToSet: "$contact_details"
+            }
+        }
+    }
+])
+
+
+
+db.getCollection("auction_master").aggregate([
+	
+]);
+{ $match: {"_id":"5fcf9cd67a98b11f1860582a"} }
+
+
+db.getCollection("auction_master").aggregate([
+    {
+			$addFields: {
+					 amtCatalogueId: { $toObjectId: "$amtCatlogId" },
+					 auctionMasterId: { $toString: "$_id" }
+				}
+		},
+		{
+				 $match: { auctionMasterId: '5fcf9cd67a98b11f1860582a' }
+		 },
+		{
+        $lookup: 
+        {
+            from: "catalog_master",
+            localField: "amtCatalogueId",
+            foreignField: "_id",
+            as: "sel_amt_catalog_dropdown"
+        }
+    }
+]);
