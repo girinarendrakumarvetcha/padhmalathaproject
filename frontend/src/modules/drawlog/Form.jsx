@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { Field, initialize, reduxForm } from 'redux-form';
 import { inputField, selectField, dateField } from "../../helpers/domcontrols";
+import { getFromShortCode , getFromPrintName } from "../../helpers/system_callbacks";
 import { required } from "../../helpers/validators";
 import apis from '../../api';
  import { routes } from "../../config/routes";
@@ -17,7 +18,8 @@ const requiredDrawDate = required("Draw Date");
 const requiredDrawGroup = required("Draw Group");
 const requiredDrawAmount = required("Draw Amount");
 const requiredAmountCatalogue = required("Amount Catalogue");
-const requiredInstallments = required("Installments");
+const requiredDrawInstallments = required("Draw Installments");
+const requiredDefinedInstallments = required("Defined Installments");
 const requiredInterval = required("Interval Cycle");
 const requiredCommssion = required("Commission");
 const requiredInstallmentAmount = required("Installment Amount");
@@ -39,7 +41,7 @@ class TrComponent extends Component {
                             name={`dl_installment_step_no_${rowId}`}
                             id={`dl_installment_step_no_${rowId}`}
                             label="Step Number" 
-                            disabled='disabled' 
+                            readOnly={true} 
                             noLabelRequired = {true}
                             component={inputField}
                             defaultValue={index}
@@ -102,12 +104,13 @@ class DrawLogForm extends Component {
     handleChangeAuction = async(event,props) => {
         
 
+        //this.props.change( 'dl_draw_installments' , 10);
         if((event != null))
-        await  apis.getAuctionDetailsById(event.value).then(res => {
+        await  apis.auctionDetailsFetch(event.value).then(res => {
             
             console.log(res.data.data);
             const row_arr = [];
-            for(var i=1;i<=res.data.data.dl_installments;i++){
+            for(var i=1;i<=res.data.data.dl_draw_installments;i++){
                 row_arr.push(`row_${i}`);
             }
             
@@ -118,12 +121,33 @@ class DrawLogForm extends Component {
 
             // //this.props.dispatch(initialize("draw_log_form", res.data.data));
             // debugger;
-            // console.log(event)   
-            this.setState({'sel_auction_dropdown':event});
-            this.props.initialize( res.data.data);  
-            
+              console.log('asf')   
+              console.log(res.data.data);   
+              console.log(res.data.data.ma_before_withdraw_amount);   
+            //this.setState({'sel_auction_dropdown':event});
+            console.log(this.props);
+            // res.data.data.forEach(() => {
+
+            // });
+            // this.props.change( 'dl_before_withdraw_amount' , res.data.data.ma_before_withdraw_amount);
+            // this.props.change( 'dl_bonus_amount' , res.data.data.ma_bonus_amount);
+            // this.props.change( 'dl_commission' , res.data.data.ma_commission);
+            // this.props.change( 'dl_installment_amount' , res.data.data.ma_installment_amount);
+            // this.props.change( 'dl_draw_installments' , res.data.data.ma_installments);
+            // this.props.change( 'dl_interval_cycle' , res.data.data.ma_interval_cycle);
+            // this.props.change( 'dl_interval_days' , res.data.data.ma_interval_days);
+            // this.props.change( 'dl_name' , res.data.data.ma_name);
+            // this.props.change( 'dl_print_name' , res.data.data.ma_print_name);
+            // this.props.change( 'dl_short_code' , res.data.data.ma_short_code);
+            // this.props.change( 'dl_status' , res.data.data.ma_status);
+            // this.props.change( 'dl_after_withdraw_amount' , res.data.data.ma_after_withdraw_amount);
+            // this.props.change( 'dl_amt_catalog' , res.data.data.sel_amt_catalog_dropdown);
+            // this.props.change( 'dl_draw_amount' , res.data.data.ma_total_amount);
+
+            //this.props.change( {'ma_before_withdraw_amount' : res.data.data.ma_before_withdraw_amount});  
+            this.props.initialize(res.data.data);
         });     
-        props.initialize(event);
+        //props.initialize(event);
         
 
 
@@ -219,7 +243,16 @@ class DrawLogForm extends Component {
         //     });
         // }
     }
-    
+    static getDerivedStateFromProps(props, state){
+        debugger;
+        console.log(props.interval_period);
+        return {
+            interval_dropdown : props.interval_period
+        }
+        
+        return null;
+    }
+
     render(){
         const { handleSubmit } = this.props;
         return (
@@ -234,6 +267,7 @@ class DrawLogForm extends Component {
                             component={inputField}
                             containerclass='col-md-4'
                             validate={[requiredName]}
+                            onChange = {(e) => { getFromShortCode(this.props,e,"dl_short_code");getFromPrintName(this.props,e,"dl_print_name");}}
                         />
                         <Field
                             type="text"
@@ -251,6 +285,7 @@ class DrawLogForm extends Component {
                             id='dl_short_code'
                             label="Short Code"  
                             component={inputField}
+                            //readOnly = {true}
                             containerclass='col-md-4'
                             validate={[requiredShortCode]}
                         />
@@ -297,12 +332,21 @@ class DrawLogForm extends Component {
                     <div className='form-row'>
                         <Field
                             type="text"
-                            name="dl_installments" 
-                            id='dl_installments'
-                            label="Installments"  
+                            name="dl_draw_installments" 
+                            id='dl_draw_installments'
+                            label="Draw Installments"  
                             component={inputField}
-                            containerclass='col-md-4'
-                            validate={[requiredInstallments]}
+                            containerclass='col-md-2'
+                            validate={[requiredDrawInstallments]}
+                        />
+                        <Field
+                            type="text"
+                            name="dl_defined_installments" 
+                            id='dl_defined_installments'
+                            label="Defined Installments"  
+                            component={inputField}
+                            containerclass='col-md-2'
+                            validate={[requiredDefinedInstallments]}
                         />
                         <Field
                             type="text"
@@ -394,7 +438,8 @@ class DrawLogForm extends Component {
                                 containerclass='col-md-4'
                                 validate={[requiredBonusAmount]}
                             />
-                        { this.state.interval_dropdown.length && 
+                         {console.log()}   
+                        {/* { this.state.interval_dropdown &&  */}
                         <Field
                                 type="text"
                                 name="dl_interval_cycle" 
@@ -406,7 +451,7 @@ class DrawLogForm extends Component {
                                 containerclass='col-md-4'
                                 validate={[requiredInterval]}
                             />
-                        }
+                        {/* } */}
                         <Field
                                 type="text"
                                 name="dl_status" 
@@ -455,14 +500,14 @@ DrawLogForm = reduxForm({
 const mapStateToProps = state => {
     
     return {
-        record_status : state.customdropdown.record_status,
+        record_status : state.customdropdown.recordStatus,
         amt_catalog_dropdown : state.amtcatalogue.dropdown_data,
         auction_dropdown : state.auction.dropdown_data,
         draw_group_dropdown : state.customergroup.dropdown_data,
         trans_arr : state.auction.trans_data,
         sel_amt_catalog_dropdown : state.drawlog.sel_amt_catalog_dropdown,
         sel_interval_period  : state.drawlog.sel_interval_period, 
-        interval_period : state.customdropdown.interval_period,
+        interval_period : state.customdropdown.intervalPeriod,
     };
 };
   

@@ -13,9 +13,10 @@ import 'react-dropdown/style.css';
 
 export const inputField = props => {
   const noLabelRequired = (props.noLabelRequired)?props.noLabelRequired: false;
-  // if(props.input.name === 'amt_installment_step_no_0'){
-  //   console.log(props);
-  // }
+  if(props.input.name === 'amt_installment_step_no_0'){
+    console.log(props);
+    debugger;
+  }
   
   return (
     <div className={classnames('form-group', props.containerclass)}>
@@ -30,6 +31,7 @@ export const inputField = props => {
             placeholder={props.label ? props.label : props.placeholder}
             id={props.id}
             disabled = {props.disabled}
+            readOnly = {props.readOnly}
             {...props.input} 
             />
       <div className='validator-content'>
@@ -176,14 +178,14 @@ export const selectField = props => {
 
 //   console.log(props.data);  
 // }
-if(props.id == 'ma_interval_period')
-  console.log(props);
+//if(props.id == 'ma_status')
+  //debugger;
 let default_value = {};
 
 if(typeof(props.defaultValue) != "undefined" && props.defaultValue != ''){
    default_value = JSON.parse(props.defaultValue);
 }
-
+//console.log(props.input.name);
 return (
     <div className={classnames('form-group', props.containerclass)}>
       <label className="control-label" htmlFor={props.input.name} >{props.label}</label>
@@ -191,7 +193,7 @@ return (
           menuPlacement={"bottom"}
           maxMenuHeight={"1%"}
           name={props.input.name}
-          options={JSON.parse(props.data)}
+          options={props.data && JSON.parse(props.data)}
           defaultValue = {Object.keys(default_value).length && default_value}
           onChange={props.input.onChange}
           isLoading={props.data ? false : true}

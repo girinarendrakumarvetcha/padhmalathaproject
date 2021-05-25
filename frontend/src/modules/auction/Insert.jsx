@@ -7,13 +7,14 @@ import AuctionForm from './Form';
 import PageTitle from '../../Layout/AppMain/FormPageTitle';
 import { saveAuctionDetailsRequest, getAuctionDetailsRequest, resetAuctionDetails } from '../../actions/auction';
 import { getAmtCatalogueDropdownRequest} from '../../actions/amtcatalogue';
+import { getRecordTransactionCodeRequest} from '../../actions/recordtransaction';
 import history from '../../config/history';
 import { initialize } from "redux-form";
 
 class AuctionInsert extends Component {
 
     handleAuctionInsert = (data) => {
-        
+        console.log(data);
         // const url_params = this.props.match.params;
         // if(url_params.id !== undefined ){
         //     apis.updateAuctionMasterById(url_params.id,data).then(res => {
@@ -50,6 +51,8 @@ class AuctionInsert extends Component {
         dispatch(resetAuctionDetails());
         if (id) {
             dispatch(getAuctionDetailsRequest(id));
+        }else{
+            //dispatch(getRecordTransactionCodeRequest('auction'));
         }
         dispatch(getAmtCatalogueDropdownRequest());
         dispatch(initialize('auction_form', this.props.form_data));

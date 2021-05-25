@@ -88,3 +88,24 @@ export function getAuctionDropdownFailure(error) {
     error
   };
 }
+
+export function setTransDataRequest(payload) {
+  return {
+    type: auctionConstants.SET_TRANS_DATA_REQUEST,
+    payload
+  };
+}
+
+export function setTransDataSuccess(data) {
+  return {
+    type: auctionConstants.SET_TRANS_DATA_SUCCESS,
+    data
+  };
+}
+
+export function setTransDataFailure(error) {
+  return {
+    type: auctionConstants.SET_TRANS_DATA_FAILURE,
+    error
+  };
+}

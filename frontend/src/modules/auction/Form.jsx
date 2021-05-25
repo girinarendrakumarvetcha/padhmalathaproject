@@ -1,14 +1,17 @@
 
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Field, initialize, reduxForm } from 'redux-form';
+import { Field, initialize, reduxForm , formValues } from 'redux-form';
 import { inputField , selectField,selectDropdown } from "../../helpers/domcontrols";
+import { setTransDataRequest } from '../../actions/auction';
+import { checkArray , getFromPrintName } from "../../helpers/system_callbacks";
 import { required } from "../../helpers/validators";
 import { routes } from "../../config/routes";
 import FormButtons from '../../Layout/AppFormButtons';
 
 const requiredAuctionName = required("Auction Name");
 const requiredPrintName = required("Print Name");
+const requireDefineType = required("Define Type");
 const requiredShortCode = required("Short Code");
 const requiredAmountCatalogue = required("Amount Catalogue");
 const requiredInstallments = required("Installments");
@@ -18,9 +21,10 @@ const requiredInstallmentAmount = required("Installment Amount");
 const requiredBonusAmount = required("Bonus Amount");
 const requiredBeforeWithdrawAmt = required("Before Withdraw Amt");
 const requiredAfterWithdrawAmt = required("After Withdraw Amount");
-const requiredTotalAmount = required("Total Amount");
+const requiredAuctionAmount = required("Auction Amount");
 const requiredReceivableAmount = required("Receivable Amount");
 const requiredFinalPayableAmount = required("Total Amount");
+const requiredStatus = required("Status");
 
 
 class TrComponent extends Component {
@@ -34,11 +38,11 @@ class TrComponent extends Component {
                             name={`amt_installment_step_no_${rowId}`}
                             id={`amt_installment_step_no_${rowId}`}
                             label="Step Number" 
-                            disabled='disabled' 
+                            readOnly =  {true} 
                             noLabelRequired = {true}
                             component={inputField}
-                            //value={rowId}
-                            defaultValue={index}
+                            value={rowId}
+                            defaultValue={rowId}
                         />
                 </td>
                 <td><Field
@@ -69,19 +73,37 @@ class TrComponent extends Component {
 class AuctionForm extends Component {
     constructor(props){
         super(props);
+        //debugger;
         this.state = {
+            shortCode : '',
             amt_catalog_data : [],
             amt_catalog_dropdown : [],
-            //sel_amt_catalog_dropdown : {value: "5f9ecd79be78dd56edac6dd8", amount: 50000, label: "50 Thousand"},
-            sel_amt_catalog_dropdown : '',
+            sel_amt_catalog_dropdown : {},
             sel_interval_dropdown : {},
             interval_dropdown : [], 
+            auction_type : [], 
+            sel_auction_type :{}, 
             transaction_data : [],
             trans_arr : []
         }
         
     }
-    
+
+    static getDerivedStateFromProps = (props, state) => { 
+        return {
+            //shortCode : props.ShortCode,
+            auction_type : props.auction_type,
+            sel_auction_type : props.sel_auction_type,
+            amt_catalog_dropdown : props.amt_catalog_dropdown,
+            sel_amt_catalog_dropdown : props.sel_amt_catalog_dropdown,
+            interval_period : props.interval_period,
+            sel_interval_period : props.sel_interval_period,
+            status_dropdown : props.status_dropdown,
+            sel_status_dropdown : props.sel_status_dropdown,
+            trans_arr : props.trans_arr
+        };
+    }
+
     componentDidMount = async () => {
         
         // let amt_catalog_data = {};
@@ -150,18 +172,26 @@ class AuctionForm extends Component {
         // }
         
     }
-    handleInstallmentsChange = (event) => {
+    handleInstallmentsChange = (event,props) => {
+        
+        props.change('ma_defined_installments',event.target.value);
+
+        //console.log('asdf');
         const row_arr = [];
         for(var i=1;i<=event.target.value;i++){
             row_arr.push(`row_${i}`);
         }
-        this.setState({trans_arr:row_arr});
+
+        props.dispatch(setTransDataRequest(row_arr));
+        props.change('trans_arr',row_arr);
+        
+        //this.setState({trans_arr:row_arr});
     }
 
     updateAmountCatalogue = (event,props) =>{
-        //props.initialize({'ma_total_amount':event.amount});
+        props.change('ma_auction_amount',event.amount);
     }
-
+    
     render(){
         const { handleSubmit } = this.props;
         return (
@@ -174,8 +204,9 @@ class AuctionForm extends Component {
                             id='ma_name'
                             label="Action Name"  
                             component={inputField}
-                            containerclass='col-md-6'
+                            containerclass='col-md-4'
                             validate={[requiredAuctionName]}
+                            onChange = {(e) => { getFromPrintName(e,this.props,"ma_print_name");}}
                         />
                         <Field
                             type="text"
@@ -183,79 +214,89 @@ class AuctionForm extends Component {
                             id='ma_print_name'
                             label="Print Name"  
                             component={inputField}
-                            containerclass='col-md-6'
+                            containerclass='col-md-4'
                             validate={[requiredPrintName]}
 
                         />
-                    </div>
-                    <div className="form-row">
                         <Field
                             type="text"
                             name="ma_short_code" 
                             id='ma_short_code'
-                            label="Short Code"  
+                            label="Short Code"
+                            value = {this.state.shortCode}  
+                            readOnly = {true}   
                             component={inputField}
                             containerclass='col-md-4'
                             validate={[requiredShortCode]}
                         />
                         
+                    </div>
+                    <div className="form-row">
                         <Field
                             type="text"
-                            name="ma_status" 
-                            id='ma_status'
-                            label="Status"
-                            component={selectField} 
+                            name="ma_define_type" 
+                            id='ma_define_type'
+                            label="Define Type"  
+                            component={selectField}
                             containerclass='col-md-4'
-                            //defaultValue={JSON.stringify(this.state.sel_amt_catalog_dropdown)} 
-                            data={JSON.stringify(this.props.record_status)}
-                            validate={[requiredAmountCatalogue]}
-                            />
-                            {(this.props.amt_catalog_dropdown.length > 0 ) && 
-                               <Field
-                                    type="text"
-                                    name="ma_amt_catalog" 
-                                    id='ma_amt_catalog'
-                                    label="Amount Catalougue"  
-                                    component={selectField} 
-                                    containerclass='col-md-4'
-                                    defaultValue={JSON.stringify(this.props.sel_amt_catalog_dropdown)} 
-                                    data={JSON.stringify(this.props.amt_catalog_dropdown)}
-                                    validate={[requiredAmountCatalogue]}
-                                    onChange = {(e) => this.updateAmountCatalogue(e, this.props)}
-                                />
-                            } 
-                            {/* <Field
+                            defaultValue={JSON.stringify(this.state.sel_auction_type)} 
+                            data={JSON.stringify(this.state.auction_type)}
+                            validate={[requireDefineType]}
+                            /> 
+                            <Field
                                 type="text"
                                 name="ma_amt_catalog" 
                                 id='ma_amt_catalog'
                                 label="Amount Catalougue"  
                                 component={selectField} 
                                 containerclass='col-md-4'
-                                defaultValue={JSON.stringify(this.props.sel_amt_catalog_dropdown)} 
-                                data={JSON.stringify(this.props.amt_catalog_dropdown)}
+                                defaultValue={JSON.stringify(this.state.sel_amt_catalog_dropdown)} 
+                                data={JSON.stringify(this.state.amt_catalog_dropdown)}
                                 validate={[requiredAmountCatalogue]}
                                 onChange = {(e) => this.updateAmountCatalogue(e, this.props)}
-                            /> */}
+                            />
+
+                             <Field
+                            type="text"
+                            name="ma_auction_amount" 
+                            id='ma_auction_amount'
+                            label="Auction Amount"  
+                            component={inputField}
+                            readOnly =  {true}
+                            containerclass='col-md-4'
+                            validate={[requiredAuctionAmount]}
+                        /> 
                     </div>
                     <div className="form-row">
                         <Field
-                            type="text"
-                            name="ma_installments" 
-                            id='ma_installments'
-                            label="Installments"  
+                            type="number"
+                            name="ma_auction_installments" 
+                            id='ma_auction_installments'
+                            label="Auction Installments"
                             component={inputField}
                             containerclass='col-md-4'
                             validate={[requiredInstallments]}
-                            onChange = {this.handleInstallmentsChange}
+                            onChange = {(e) => this.handleInstallmentsChange(e, this.props)}
                         />
+                        <Field
+                            type="number"
+                            name="ma_defined_installments" 
+                            id='ma_defined_installments'
+                            label="Define Installments"
+                            component={inputField}
+                            containerclass='col-md-4'
+                            validate={[requiredInstallments]}
+                            //onChange = {this.handleInstallmentsChange}
+                        />
+                        
                         <Field
                             type="text"
                             name="ma_interval_period" 
                             id='ma_interval_period'
                             label="Interval"  
                             component={selectField}
-                            defaultValue={JSON.stringify(this.props.sel_interval_period)}
-                            data={JSON.stringify(this.props.interval_period)}
+                            defaultValue={JSON.stringify(this.state.sel_interval_period)}
+                            data={JSON.stringify(this.state.interval_period)}
                             containerclass='col-md-4'
                             validate={[requiredInterval]}
                         />
@@ -308,18 +349,19 @@ class AuctionForm extends Component {
                             containerclass='col-md-4'
                             validate={[requiredAfterWithdrawAmt]}
                         />
-                        <Field
+                       <Field
                             type="text"
-                            name="ma_total_amount" 
-                            id='ma_total_amount'
-                            label="Total Amount"  
-                            component={inputField}
+                            name="ma_status" 
+                            id='ma_status'
+                            label="Status"
+                            component={selectField} 
                             containerclass='col-md-4'
-                            validate={[requiredTotalAmount]}
-                        />
+                            defaultValue={JSON.stringify(this.state.sel_status_dropdown)} 
+                            data={JSON.stringify(this.state.record_status)}
+                            validate={[requiredStatus]}
+                            />
                     </div>
-                    {this.props.trans_arr.length > 0 && 
-                        <div className="form-row"> 
+                    <div className="form-row"> 
                         <h2>Details</h2>
                         <table className='table table-bordered'>
                             <thead>
@@ -329,15 +371,21 @@ class AuctionForm extends Component {
                                     <th>Final Amt.</th>
                                 </tr>
                             </thead>
+                            
                             <tbody>
-                            {this.props.trans_arr.map((val,index) => (
-                                
-                                <TrComponent  rowId={index} index={index} key={index}  />
-                                ))}
+                            {   this.props.trans_arr ? (   
+                                    this.props.trans_arr.map((val,index) => (
+                                        <TrComponent  rowId={index} index={index} key={index}  />
+                                    ))
+                                 ): (
+                                    <tr>
+                                        <td colSpan='100'> No data available ..!</td>
+                                    </tr>
+                                )
+                            }
                             </tbody>
                         </table>
                     </div>
-                            }
                     <FormButtons listUrl={routes.CHIT_MASTER_LIST}/>
                 </form>
             </div>
@@ -346,24 +394,23 @@ class AuctionForm extends Component {
 };
 
 
-
-// export default reduxForm({
-//     form: 'auction_form'
-//   })(AuctionForm);
-
 AuctionForm = reduxForm({
     form: 'auction_form',
     enableReinitialize: true
 })(AuctionForm);
 
 const mapStateToProps = state => {
+    
     return {
-        record_status : state.customdropdown.record_status,
+        status_dropdown : state.customdropdown.recordStatus,
+        auction_type : state.customdropdown.auctionType,
         amt_catalog_dropdown : state.amtcatalogue.dropdown_data,
         trans_arr : state.auction.trans_data,
         sel_amt_catalog_dropdown : state.auction.sel_amt_catalog_dropdown,
         sel_interval_period  : state.auction.sel_interval_period, 
-        interval_period : state.customdropdown.interval_period,
+        interval_period : state.customdropdown.intervalPeriod,
+        shortCode : state.recordtrasnaction.rec_trans.short_code,
+        sel_status_dropdown : state.auction.sel_status_dropdown
     };
 };
   

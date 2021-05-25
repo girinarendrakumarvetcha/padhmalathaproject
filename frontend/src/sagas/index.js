@@ -8,6 +8,7 @@ import drawlog from "./drawlog";
 import drawtransaction from "./drawtransaction";
 import invoice from "./invoice";
 import payment from "./payment";
+import record_transaction from "./recordtransaction";
 
 
 export default function* rootSaga() {
@@ -21,6 +22,7 @@ export default function* rootSaga() {
     ...drawlog,
     ...drawtransaction, 
     ...invoice, 
-    ...payment
+    ...payment,
+    ...record_transaction
   ]);
 }

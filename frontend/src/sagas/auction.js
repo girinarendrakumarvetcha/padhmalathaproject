@@ -31,13 +31,14 @@ function saveAuctionDetails() {
       console.log(actions);
       let response = {};
       if(typeof id != 'undefined' && id){
-        response = yield call(() => api.updateAuctionById(id, data));
+        response = yield call(() => api.updateAuctionDetails(id, data));
       }else{
-        response = yield call(() => api.insertAuction(data));
+        response = yield call(() => api.insertAuctionDetails(data));
       }
       if (response && response.data.success) {
         yield put(auctionActions.saveAuctionDetailsSuccess(response.data));
-        history.push(`${routes.Auction_LIST}`);
+        history.push(`${routes.CHIT_MASTER_LIST}`);
+        window.location.reload();
         //yield put(push(`${routes.Auction_LIST}`));
       } else {
         yield put(auctionActions.saveAuctionDetailsFailure(response));
@@ -84,6 +85,19 @@ function getAuctionDropdown() {
   };
 }
 
+function setAuctionTransData() {
+  
+  return function*(actions) {
+    
+    try {
+      const { payload } = actions;
+      yield put(auctionActions.setTransDataSuccess(payload));
+    } catch (error) {
+      yield put(auctionActions.setTransDataFailure(error));
+    }
+  };
+}
+
 function noAction(){
   return function*(actions){};
 }
@@ -92,6 +106,7 @@ export function* AuctionsWatcher() {
   yield takeLatest(auctionConstants.SAVE_FORM_REQUEST, saveAuctionDetails());
   yield takeLatest(auctionConstants.GET_LIST_REQUEST, getAuctionList());
   yield takeLatest(auctionConstants.FORM_DROPDOWN_REQUEST, getAuctionDropdown());
+  yield takeLatest(auctionConstants.SET_TRANS_DATA_REQUEST, setAuctionTransData());
   // yield takeLatest(auctionConstants.RESET_DETAILS, noAction());
 }
 

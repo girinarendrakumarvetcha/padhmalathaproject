@@ -1,4 +1,7 @@
 import { auctionConstants } from '../constants';
+import {recordStatus}  from './customdropdown.reducer';
+
+
 const initialState = {
     loading: false,
     form_data: [],
@@ -31,14 +34,26 @@ export function auction(state = initialState, action) {
                 error: ''
             };
         case auctionConstants.GET_FORM_SUCCESS:
+            console.log(recordStatus);  
+            let sel_staus_dropdown = {};
+            if(action.data.data.ma_status ){
+                for(var a in recordStatus){
+                    if(recordStatus[a]['value'] == action.data.data.ma_status){
+                        sel_staus_dropdown = recordStatus[a];
+                        action.data.data.ma_status = recordStatus[a];
+                    }
+                }
+            }  
+            
             return {
                 ...state,
-                form_data: action.data.data,
                 trans_data:action.data.data.trans_arr,
                 sel_amt_catalog_dropdown:action.data.data.sel_amt_catalog_dropdown,
                 sel_interval_period:action.data.data.sel_interval_period,
+                sel_staus_dropdown:sel_staus_dropdown,
                 loading: false,
-                error: ''
+                error: '',
+                form_data: action.data.data
             };
         case auctionConstants.GET_FORM_FAILURE:
             return {
@@ -122,7 +137,27 @@ export function auction(state = initialState, action) {
                 dropdown_data: [],
                 error: action.error
             };
-                
+        case auctionConstants.SET_TRANS_DATA_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                trans_data : [],
+                error: ''
+            };
+        case auctionConstants.SET_TRANS_DATA_SUCCESS:
+            return {
+                ...state,
+                trans_data : action.data,
+                loading: false,
+                error: ''
+            };
+        case auctionConstants.SET_TRANS_DATA_FAILURE:
+            return {
+                loading: false,
+                trans_data: [],
+                error: action.error
+            };
+            
         default:
             return state
     }

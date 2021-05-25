@@ -51,12 +51,20 @@ class CustomerGroupInsert extends Component {
         if (id) {
             dispatch(getCustomerGroupDetailsRequest(id));
         }
-        
-        dispatch(getCustomerDropdownRequest());
+        console.log('asdfasdf');    
+        console.log(dispatch(getCustomerDropdownRequest()));
+        dispatch(getSelectedCustomerDropdownRequest());
         dispatch(initialize('customer_group_form', this.props.form_data));
 
-        dispatch(getSelectedCustomerDropdownRequest());
     }
+
+    static getDerivedStateFromProps = (nextProps, prevState) => {
+        console.log(nextProps);
+        // if (nextProps.total !== prevState.total) {
+        //   return ({ total: nextProps.total }) // <- this is setState equivalent
+        // }
+        return null
+      }
     // componentWillReceiveProps = async(props) =>{
     //     console.log(props.form_data);
     //     let customer_dropdown_arr = [];

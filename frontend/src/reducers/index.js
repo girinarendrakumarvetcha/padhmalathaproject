@@ -11,11 +11,12 @@ import { invoice } from './invoice.reducer';
 import customdropdown from './customdropdown.reducer';
 
 import { payment } from './payment.reducer';
+import { recordtrasnaction } from './recordtrasnaction.reducer';
 import { combineReducers } from "redux";
 
 const reducers = {
     ThemeOptions,
-    customer, customergroup, interval, amtcatalogue, auction, drawlog, drawtransaction, invoice,payment,
+    customer, customergroup, interval, amtcatalogue, auction, drawlog, drawtransaction, invoice,payment,recordtrasnaction,
     customdropdown
 };
 

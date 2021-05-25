@@ -23,7 +23,7 @@ getDrawList = async (req, res) => {
             dummy_arr['dl_id']            = data['_id'];        
             dummy_arr['dl_name']            = data['name'];        
             dummy_arr['dl_date']            = data['drawDate'];   
-            dummy_arr['dl_installments']    = data['installments'];
+            dummy_arr['dl_draw_installments']    = data['installments'];
             dummy_arr['dl_amount']          = data['drawAmount'];      
             dummy_arr['dl_short_code']       = data['shortCode'];   
             // dummy_arr['dl_unique_code']     = data['drawUniqueCode'];  
@@ -84,16 +84,16 @@ createDraw = async (req,res) => {
     req_obj['auctionMasterId']      = ins_arr.dl_auction_master.value;
     req_obj['drawDate']             = ins_arr.dl_draw_date;
     req_obj['drawGroupId']          = ins_arr.dl_draw_group.value;
-    //req_obj['contactCount']         = ins_arr.dl_installments;
+    //req_obj['contactCount']         = ins_arr.dl_draw_installments;
     req_obj['isVariableBonus']      = 'No';
     req_obj['printName']            = ins_arr.dl_print_name;
     req_obj['amtCatlogId']          = ins_arr.dl_amt_catalog.value;
     req_obj['drawAmount']           = ins_arr.dl_total_amount;
-    req_obj['installments']         = ins_arr.dl_installments;
+    req_obj['installments']         = ins_arr.dl_draw_installments;
     req_obj['intervalCycle']        = ins_arr.dl_interval_cycle.value;
     req_obj['intervalDays']         = ins_arr.dl_interval_cycle.interval;
     req_obj['commissionAmt']        = ins_arr.dl_commission;
-    req_obj['totalComAmt']          = ins_arr.dl_installments * ins_arr.dl_commission;
+    req_obj['totalComAmt']          = ins_arr.dl_draw_installments * ins_arr.dl_commission;
     req_obj['installmentAmt']       = ins_arr.dl_installment_amount;
     req_obj['beforeWithDraw']       = ins_arr.dl_before_withdraw_amount;
     req_obj['afterWithDraw']        = ins_arr.dl_after_withdraw_amount;
@@ -221,7 +221,7 @@ updateDraw = async (res,req) => {
         }
         draw_master['drawName']          = body.dl_name;
         draw_master['drawPrintName']     = body.dl_print_name;
-        draw_master['drawInstallments']  = body.dl_installments;
+        draw_master['drawInstallments']  = body.dl_draw_installments;
         draw_master['drawAmount']        = body.dl_amount;
         draw_master['drawShortCode']     = body.dl_short_code;
         draw_master['drawStatus']        = body.dl_status;
@@ -297,7 +297,7 @@ getDrawDataById = async (req, res) => {
         draw_master_data['dl_draw_group']       = auction_master['drawGroupId'] ;
         draw_master_data['dl_total_amount']   = auction_master['drawAmount'];
         draw_master_data['dl_draw_amount']   = auction_master['drawAmount'];
-        draw_master_data['dl_installments']   = auction_master['installments'];
+        draw_master_data['dl_draw_installments']   = auction_master['installments'];
         draw_master_data['dl_interval_cycle'] = auction_master['intervalCycle'];
         draw_master_data['dl_interval']          = auction_master['intervalDays'];
         draw_master_data['dl_commission']     = auction_master['commissionAmt'];

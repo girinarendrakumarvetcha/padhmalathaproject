@@ -8,6 +8,7 @@ router.post('/auction', AuctionCtrl.createAuction);
 router.get('/auctionlist', AuctionCtrl.getAuctionList);
 router.get('/auctiondropdown', AuctionCtrl.getAuctionDrpdwn);
 router.get('/auction/fetch/:id', AuctionCtrl.getAuctionById);
+router.get('/auction/draw/fetch/:id', AuctionCtrl.getAuctionDetailsForDraw);
 router.put('/auction/update/:id', AuctionCtrl.updateAuction);
 // router.delete('/customer/:id', AuctionCtrl.deleteContact);
 // router.get('/customer/:id', AuctionCtrl.getContactById);

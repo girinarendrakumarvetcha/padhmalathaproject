@@ -18,8 +18,8 @@ const formColumnsName = formColumns(
   );
 const formColumnsInstallments = formColumns(
     {
-      name: "ma_installments",
-      label: "Installments"
+      name: "ma_auction_installments",
+      label: "Auction Installments"
     },
     {
       sort: true,

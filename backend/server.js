@@ -13,6 +13,7 @@ const drawMasterRouter = require('./routes/draw_master-router');
 const drawInvoiceRouter = require('./routes/draw_invoice-router');
 const drawInvoicePaymentRouter = require('./routes/draw_invoice_payment-router');
 const drawMasterTransRouter = require('./routes/draw_master_trans-router');
+const recordTransactionMasterRouter = require('./routes/record_transaction_master-router');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(cors())
 app.use(bodyParser.json());
@@ -36,6 +37,7 @@ app.use('/api',drawMasterRouter);
 app.use('/api',drawInvoiceRouter);
 app.use('/api',drawInvoicePaymentRouter);
 app.use('/api',drawMasterTransRouter);
+app.use('/api',recordTransactionMasterRouter);
 
 app.listen(apiPort, () => console.log(`server runniong on port ${apiPort}`));
 

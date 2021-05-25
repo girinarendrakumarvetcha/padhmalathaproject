@@ -10,7 +10,7 @@ const insertCustomer     = payload => api.post(`/customer`, payload);
 const getAllCustomers    = () => api.get(`/customers`);
 const deleteCustomerById = id => api.delete(`/customer/${id}`);
 const getCustomerById    = id => api.get(`/customer/${id}`);
-const insertAuction      = payload => api.post(`/auction`, payload);
+const insertAuctionDetails      = payload => api.post(`/auction`, payload);
 const getAuctionList     = () => api.get(`/auctionlist`);
 const getAmtCatalogList  = () => api.get(`/amtcataloglist`);
 const insertAmtCatalog   = payload => api.post(`/amt_catalog_insert`,payload);
@@ -26,6 +26,7 @@ const amtCatalogueRecordFetch    = id => api.get(`/amt_catalog/fetch/${id}`);
 const customerRecordFetch    = id => api.get(`/customer/fetch/${id}`);
 const customerGroupRecordFetch    = id => api.get(`/draw_group/fetch/${id}`);
 const auctionRecordFetch    = id => api.get(`/auction/fetch/${id}`);
+const auctionDetailsFetch    = id => api.get(`auction/draw/fetch/${id}`);
 const customerDropdown       = () => api.get(`/customerdrpdwn`);
 const amtCatalogueDropdown   = () => api.get(`/amtcatalogdropdown`);
 const intervalDropdown       = () => api.get(`/intervaldropdown`);
@@ -36,7 +37,7 @@ const updateIntervalById = (id, payload) => api.put(`/installment_interval/updat
 const updateAmtCatalogueById = (id, payload) => api.put(`/amt_catalog/update/${id}`, payload);
 const updateCustomerById = (id, payload) => api.put(`/customer/update/${id}`, payload);
 const updateDrawGroupById = (id, payload) => api.put(`/draw_group/update/${id}`, payload);
-const updateAuctionMasterById = (id, payload) => api.put(`/auction/update/${id}`, payload);
+const updateAuctionDetails = (id, payload) => api.put(`/auction/update/${id}`, payload);
 //const getAuctionDetailsById = (id, payload) => api.get(`/auctoion_details/${id}`, payload);
 const getAuctionDetailsById = (id, payload) => api.get(`/auction/fetch/${id}`, payload);
 const getDrawInvoiceById = (id, payload) => api.get(`/draw_invoice/${id}`, payload);
@@ -52,13 +53,14 @@ const drawMasterTransFetch = (id) => api.get(`/draw_master_trans/fetch/${id}`);
 const insertDrawMasterTrans = (payload) => api.post(`/draw_master_trans/add`,payload);
 const getDrawMasterTransList = (id) => api.get(`/draw_master_trans/list/${id}`);
 const updateDrawMasterTransById = (id, payload) => api.put(`/draw_master_trans/update/${id}`, payload);
+const getRecordTransactionCode = (code) => api.get(`/getrecordcode/${code}`);
 const apis = {
     insertCustomer,
     getAllCustomers,
     updateCustomerById,
     getCustomerById,
     deleteCustomerById,
-    insertAuction,
+    insertAuctionDetails,
     getAuctionList,
     getAmtCatalogList,
     insertAmtCatalog,
@@ -80,7 +82,7 @@ const apis = {
     customerRecordFetch ,
     customerGroupRecordFetch,
     auctionRecordFetch,
-    updateAuctionMasterById,
+    updateAuctionDetails,
     getAuctionDetailsById,
     getDrawInvoiceList,
     updateDrawGroupById,
@@ -97,7 +99,9 @@ const apis = {
     drawMasterTransFetch,
     insertDrawMasterTrans,
     getDrawMasterTransList,
-    updateDrawMasterTransById
+    updateDrawMasterTransById,
+    getRecordTransactionCode,
+    auctionDetailsFetch
 }
 
 export default apis;
