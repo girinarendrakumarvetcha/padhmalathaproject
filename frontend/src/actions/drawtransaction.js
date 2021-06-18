@@ -48,10 +48,11 @@ export function saveDrawTransactionDetailsFailure(error) {
   };
 }
 
-export function getDrawTransactionListRequest() {
+export function getDrawTransactionListRequest(url_params) {
 
   return {
-    type: drawtransactionConstants.GET_LIST_REQUEST
+    type: drawtransactionConstants.GET_LIST_REQUEST,
+    url_params : url_params
   };
 }
 

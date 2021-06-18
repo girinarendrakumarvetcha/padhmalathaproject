@@ -1,0 +1,189 @@
+db.getCollection("draw_master").aggregate([
+    {
+        $addFields: {
+            drawMasterId: {
+                $toString: "$_id"
+            },
+            
+        }
+    },
+    {
+        $lookup: 
+        {
+            from: "draw_master_trans",
+            //localField: "drawMasterId",
+            //foreignField: "drawMasterId",
+            let: {
+                drawMasterId: "$drawMasterId"
+            },
+            pipeline: [
+                {
+                    "$addFields": {
+                        "drawMasterTransId": {
+                            $toString: "$_id"
+                        }
+                    }
+                },
+                {
+                    $match: {
+                        $expr: {
+                            $and: [
+                                {
+                                    $eq: ["$drawMasterId", "$$drawMasterId"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    $lookup: 
+                    {
+                        from: "draw_invoice",
+                        let: {
+                            drawMasterTransId: "$drawMasterTransId"
+                        },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            {
+                                                $eq: ["$drawMasterTransId", "$$drawMasterTransId"]
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            
+                        ],
+                        as: "draw_invoice"
+                    }
+                },
+                {
+                    $match: {
+                        drawBookCode: 'DWPD1bk1'
+                    }
+                }
+            ],
+            as: "draw_book"
+        }
+    },
+    {
+        $match: {
+            shortCode: /dwpd1/i
+            //shortCode: /DWPD1bk1/i
+        },
+        //$match : { drawBookCode : 'DWPD1bk1'}
+    },
+    
+]);
+
+
+db.getCollection("draw_master").aggregate([
+    {
+        $addFields: {
+            drawMasterId: {
+                $toString: "$_id"
+            },
+            
+        }
+    },
+    {
+        $lookup: 
+        {
+            from: "draw_master_trans",
+            let: {
+                drawMasterId: "$drawMasterId"
+            },
+            pipeline: [
+                {
+                    "$addFields": {
+                        "drawMasterTransId": {
+                            $toString: "$_id"
+                        }
+                    }
+                },
+                {
+                    $match: {
+                        $expr: {
+                            $and: [
+                                {
+                                    $eq: ["$drawMasterId", "$$drawMasterId"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    $lookup: 
+                    {
+                        from: "draw_invoice",
+                        let: {
+                            drawMasterTransId: "$drawMasterTransId"
+                        },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            {
+                                                $eq: ["$drawMasterTransId", "$$drawMasterTransId"]
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            
+                        ],
+                        as: "draw_invoice"
+                    }
+                },
+                //                    {
+                //                        $match: {
+                //                            drawBookCode: 'DWPD1bk1'
+                //                        }
+                //                    }
+            ],
+            as: "draw_book"
+        }
+    },
+    {
+        $match: {
+            $or: [
+                // {
+                //     shortCode: { $regex : req.params.q , $options: 'i' }
+                // },
+                {
+                    //draw_book : { $elemMatch : { drawBookCode : { $regex : req.params.q , $options: 'i' } } }
+                    draw_book: {
+                        $elemMatch: {
+                            drawBookCode: 'DWPD1bk1'
+                        }
+                    }
+                }
+            ]
+        },
+        
+    },
+//		{
+//    "$unwind": "$draw_book"
+//},
+    {
+        $project: {
+            name: 1,draw_book :1,
+            draw_book: {
+                $filter: {
+                    input: "$draw_book",
+                    as: "draw_book_arr",
+                    cond: {
+                        $or: [
+                            {
+                                "$eq": [ "$$draw_book_arr.drawBookCode","DWPD1bk1" ] 
+                            }
+                        ]
+                    }
+                }
+    }
+            }
+        }
+])

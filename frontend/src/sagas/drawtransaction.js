@@ -9,8 +9,9 @@ import api from "../api";
 function getDrawTransactionDetails() {
   return function*(actions) {
     try {
+      
       const { payload } = actions;
-      const response = yield call(() => api.drawtransactionRecordFetch(payload));
+      const response = yield call(() => api.drawTransactionRecordFetch(payload));
       if (response && response.data.success) {
         yield put(drawtransactionActions.getDrawTransactionDetailsSuccess(response.data));
       } else {
@@ -48,11 +49,11 @@ function saveDrawTransactionDetails() {
   };
 }
 
-function getDrawTransactionList() {
+function getDrawTransactionList(url_params) {
   
   return function*(actions) {
     try {
-      const data = yield call(() => api.getAllDrawTransactions());
+      const data = yield call(() => api.getDrawMasterTransList(actions.url_params.id));
       if (data && data.data.success) {
         yield put(drawtransactionActions.getDrawTransactionListSuccess(data.data));
       } else {
@@ -63,8 +64,6 @@ function getDrawTransactionList() {
     }
   };
 }
-
-
 
 function noAction(){
   return function*(actions){};

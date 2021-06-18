@@ -27,7 +27,8 @@ export const routes = {
   DRAW_MASTER_EDIT:`${BASE_URL}draw_master/update` ,
   DRAW_INVOICE_LIST:`${BASE_URL}draw_invoice_list/index/:id` ,
   DRAW_INVOICE_LIST_URL:`${BASE_URL}draw_invoice_list/index` ,
-  DRAW_INVOICE_UPDATE:`${BASE_URL}draw_invoice/update/:id` ,
+  DRAW_INVOICE_UPDATE:`${BASE_URL}draw_invoice/update/:id/:parID` ,
+  DRAW_INVOICE_UPDATE_URL:`${BASE_URL}draw_invoice/update/` ,
   DRAW_INVOICE_EDIT:`${BASE_URL}draw_invoice/update`, 
   
   DRAW_INVOICE_PAYMENT_LIST:`${BASE_URL}draw_invoice_payment/list/:id` ,
@@ -41,6 +42,7 @@ export const routes = {
   DRAW_MASTER_TRANS_LIST_URL:`${BASE_URL}draw_master_trans/list` ,
   DRAW_MASTER_TRANS_ADD:`${BASE_URL}draw_master_trans/add` ,
   DRAW_MASTER_TRANS_ADD_URL:`${BASE_URL}draw_master_trans/add/:id` ,
-  DRAW_MASTER_TRANS_UPDATE:`${BASE_URL}draw_master_trans/update/:id` ,
+  DRAW_MASTER_TRANS_UPDATE:`${BASE_URL}draw_master_trans/update/:id/:parID` ,
   DRAW_MASTER_TRANS_EDIT:`${BASE_URL}draw_master_trans/update`, 
+  SITE_PAGE_LIST:`${BASE_URL}site_page/index`, 
 };

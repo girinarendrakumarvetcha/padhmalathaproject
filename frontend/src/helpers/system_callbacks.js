@@ -2,7 +2,7 @@ export  function getShortCode(str){
   return str.replace(/\s+/g, '_').toLowerCase();
 }
 
-export  function getFromShortCode(props,event,field){
+export  function getFromShortCode(event,props,field){
   props.change(field,event.target.value.replace(/\s+/g, '_').toLowerCase());
 }
 

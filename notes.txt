@@ -199,3 +199,146 @@ str.replace(/\s+/g, '-').toLowerCase()
 onChange = {(e) => { getFromShortCode(this.props,e,"group_short_code")}}
 
 import { getShortCode , getFromShortCode } from "../../helpers/system_callbacks";
+
+
+db.getCollection("draw_master_trans").update({}, {$rename: {'contactId': 'contactMasterId'}}, false, true);
+
+db.getCollection("draw_master_trans").update({}, {$rename: {'contactId': 'contactMasterId'}}, {multi:true});
+
+
+db.getCollection("draw_master").aggregate([
+    {
+        $addFields: {
+            drawMasterId: {
+                $toString: "$_id"
+            },
+            
+        }
+    },
+        $lookup: 
+    {
+        {
+            from: "draw_master_trans",
+            //localField: "drawMasterId",
+            //foreignField: "drawMasterId",
+            let: {
+                drawMasterId: "$drawMasterId"
+            },
+            pipeline: [
+                {
+								 "$addFields": {
+                    "drawMasterTransId": {
+                        $toString: "$_id"
+                    }
+                }
+								},
+								{
+                    $match: {
+                        $expr: {
+                            $and: [
+                                {
+                                    $eq: ["$drawMasterId", "$$drawMasterId"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {$match: {
+                    drawBookCode: 'DWPD1bk1'
+                }
+								}
+            ],
+            as: "draw_book"
+        }
+    },
+		{
+        $lookup: 
+        {
+            from: "draw_invoice",
+            //localField: "drawMasterId",
+            //foreignField: "drawMasterId",
+            let: {
+                drawMasterId: "$drawMasterId"
+            },
+            pipeline: [
+                {
+                    $match: {
+                        $expr: {
+                            $and: [
+                                {
+                                    $eq: ["$drawMasterId", "$$drawMasterId"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {$match: {
+                    drawBookCode: 'DWPD1bk1'
+                }
+								}
+            ],
+            as: "draw_book"
+        }
+    },
+    {
+        $match: {
+            shortCode: /dwpd1/i
+						//shortCode: /DWPD1bk1/i
+        },
+        //$match : { drawBookCode : 'DWPD1bk1'}
+    },
+    
+]);
+
+
+
+
+
+workig serach code
+db.getCollection("draw_master").aggregate([
+    {
+        $addFields: {
+            drawMasterId: {
+                $toString: "$_id"
+            },
+            
+        }
+    },
+    {
+        $lookup: 
+        {
+            from: "draw_master_trans",
+            //localField: "drawMasterId",
+            //foreignField: "drawMasterId",
+            let: {
+                drawMasterId: "$drawMasterId"
+            },
+            pipeline: [
+                {
+                    $match: {
+                        $expr: {
+                            $and: [
+                                {
+                                    $eq: ["$drawMasterId", "$$drawMasterId"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {$match: {
+                    drawBookCode: 'DWPD1bk1'
+                }
+								}
+            ],
+            as: "draw_book"
+        }
+    },
+    {
+        $match: {
+            shortCode: /dwpd1/i
+						//shortCode: /DWPD1bk1/i
+        },
+        //$match : { drawBookCode : 'DWPD1bk1'}
+    },
+    
+]);

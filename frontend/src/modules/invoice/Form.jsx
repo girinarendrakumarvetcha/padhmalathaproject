@@ -18,7 +18,8 @@ class DrawInvoiceForm extends Component {
     constructor(props){
         super(props);
         this.state = {
-           di_data : []
+           di_data : [],
+           parID : ''
         }
     }
 
@@ -34,7 +35,13 @@ class DrawInvoiceForm extends Component {
     }
 
     render(){
-        const { handleSubmit } = this.props;
+        //const { handleSubmit } = this.props;
+        const {
+            match: {
+              params: { id, parID }
+            },
+            handleSubmit
+          } = this.props;
         return (
             <div className='form-container'>
                 <form  onSubmit={ handleSubmit } >
@@ -143,7 +150,7 @@ class DrawInvoiceForm extends Component {
                         />                       
                     </div>
                     <DrawInvoicePaymentList  {...this.props} />
-                    <FormButtons listUrl={routes.DRAW_INVOICE_LIST}/>
+                    <FormButtons listUrl={routes.DRAW_INVOICE_LIST_URL+`/${parID}`}/>
                 </form>
             </div>
         );

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/draw_master_trans/list/:id', DrawMasterTransCtrl.getDrawMasterTransList);
 router.post('/draw_master_trans/add', DrawMasterTransCtrl.createDrawMasterTrans);
-router.post('/draw_master_trans/update/:id', DrawMasterTransCtrl.updateDrawMasterTrans);
+router.put('/draw_master_trans/update/:id', DrawMasterTransCtrl.updateDrawMasterTrans);
 router.get('/draw_master_trans/fetch/:id', DrawMasterTransCtrl.getDrawMasterTransDataById);
 
 module.exports = router;

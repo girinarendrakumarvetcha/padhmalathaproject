@@ -15,7 +15,7 @@ import { initialize } from "redux-form";
 class DrawLogInsert extends Component {
 
     handleDrawLogInsert = (data) => {
-        //console.log(data);  
+        console.log(data);  
         // apis.insertDraw(data).then(res => {
         //     //this.props.history.push(`${routes.DRAW_MASTER_LIST}`);
         // });

@@ -30,7 +30,7 @@ class AuctionInsert extends Component {
                 params: { id }
             },
             dispatch
-        } = this.props
+        } = this.props;
 
         if (id) {
             dispatch(saveAuctionDetailsRequest({data,id,history}));
@@ -54,8 +54,8 @@ class AuctionInsert extends Component {
         }else{
             //dispatch(getRecordTransactionCodeRequest('auction'));
         }
-        dispatch(getAmtCatalogueDropdownRequest());
         dispatch(initialize('auction_form', this.props.form_data));
+        dispatch(getAmtCatalogueDropdownRequest());
      }  
     render(){
         return (

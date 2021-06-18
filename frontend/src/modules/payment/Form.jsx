@@ -19,6 +19,13 @@ class DrawInvoicePaymentForm extends Component {
     }
 
     componentDidMount = () => { 
+
+        const {
+            match: {
+                params: { id }
+            },
+            dispatch
+        } = this.props;
         // const url_params = this.props.match.params;
         // this.props.initialize({ dip_draw_invoice: url_params.id });
 
@@ -40,12 +47,12 @@ class DrawInvoicePaymentForm extends Component {
                             name="dip_draw_invoice" 
                             id='dip_draw_invoice'
                             label="Invoice Id"  
-                            defaultValue=  { this.props.match.params.id}
-                            //value={ this.props.match.params.id}
+                            // defaultValue=  { this.props.match.params.id}
+                            // value={ this.props.match.params.id}
                             noLabelRequired = {true}
                             component={inputField}
                             containerclass='col-md-6'
-                            validate={[requiredPaymentAmount]}
+                            
                     />
                     <div className="form-row">
                         <Field  type="text"

@@ -28,7 +28,8 @@ getDrawInvoiceList = async (req, res) => {
                foreignField: "_id",
                as: "customer_details"
              }
-        }
+        },
+        { $sort : { contactMasterId : 1 } }
       ]).exec((err, draw_invoice) => {
            if (err) {
             return res.status(400).json({ success: false, error: err })
@@ -42,10 +43,12 @@ getDrawInvoiceList = async (req, res) => {
         for(let data of draw_invoice) {
             const dummy_arr = {};
             dummy_arr['di_id']    = data['_id'];
+            dummy_arr['di_draw_master_id']    = data['drawMasterId'];
             dummy_arr['di_installment_step']    = data['installmentStepNo'];
             dummy_arr['di_before_payable']          = data['beforePayableAmount'];      
             dummy_arr['di_after_payable']       = data['afterPayableAmount'];
             dummy_arr['di_payable_amount']       = data['payableAmount'];
+            dummy_arr['di_paid_amount']       = data['paidAmount'];
             dummy_arr['di_payment_status']       = data['paymentStatus'];
             dummy_arr['di_payment_date']       = data['paymentDate'];
             dummy_arr['di_customer']       = data['customer_details'][0]['name'];
@@ -53,7 +56,7 @@ getDrawInvoiceList = async (req, res) => {
         }
         // console.log(ret_arr);
         return res.status(200).json({ success: true, data: ret_arr });
-    })
+    });
 
     // await Draw_invoice.find({ drawMasterId : req.params.id }, (err, draw_invoice) => {
     //     if (err) {
@@ -356,6 +359,7 @@ getDrawInvoiceDataById = async (req, res) => {
                 draw_invoice_arr['di_id']                   = req.params.id;
                 draw_invoice_arr['di_installment_step_no']  = draw_invoice_data['installmentStepNo'];
                 draw_invoice_arr['di_draw_master']          = draw_invoice_data['draw_master_details'][0]['name'];       
+                draw_invoice_arr['di_draw_master_id']          = draw_invoice_data['draw_master_details'][0]['_id'];       
                 draw_invoice_arr['di_customer_name']        = draw_invoice_data['customer_details'][0]['name'];    
                 draw_invoice_arr['di_before_withdraw']      = draw_invoice_data['beforePayableAmount'];
                 draw_invoice_arr['di_after_withdraw']       = draw_invoice_data['afterPayableAmount']; 

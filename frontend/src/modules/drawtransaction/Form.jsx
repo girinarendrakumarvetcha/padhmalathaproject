@@ -1,13 +1,11 @@
 
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { inputField , dateField } from "../../helpers/domcontrols";
+import { inputField,viewField, dateField ,selectField } from "../../helpers/domcontrols";
 import { required ,validEmail } from "../../helpers/validators";
-import apis from '../../api';
 import { routes } from "../../config/routes";
 import FormButtons from '../../Layout/AppFormButtons';
-const requiredPaymentAmount = required("Payment Amount");
-const requiredPaymentDate = required("Payment Date");
+const requiredDrawTransactionId = required("Draw Transaction Id");
 
 class DrawTransactionForm extends Component {
     constructor(props){
@@ -19,7 +17,7 @@ class DrawTransactionForm extends Component {
 
     componentDidMount = () => { 
         const url_params = this.props.match.params;
-        this.props.initialize({ dip_draw_invoice: url_params.id });
+        this.props.initialize({ dwt_id: url_params.id });
 
         //this.props.dispatch(change('myFormName', 'anotherField', 'value'));
 
@@ -31,41 +29,110 @@ class DrawTransactionForm extends Component {
     }
 
     render(){
-        const { handleSubmit } = this.props;
+        const {
+            match: {
+              params: { id, parID }
+            },
+            handleSubmit
+          } = this.props;
         return (
             <div className='form-container'>
                 <form  onSubmit={ handleSubmit } >
                     <Field  type="hidden"
-                            name="dip_draw_invoice" 
-                            id='dip_draw_invoice'
-                            label="Invoice Id"  
+                            name="dwt_id" 
+                            id='dwt_id'
+                            label="Draw Transaction Id"  
                             defaultValue=  { this.props.match.params.id}
                             //value={ this.props.match.params.id}
                             noLabelRequired = {true}
                             component={inputField}
                             containerclass='col-md-6'
-                            validate={[requiredPaymentAmount]}
+                            validate={[requiredDrawTransactionId]}
                     />
                     <div className="form-row">
-                        <Field  type="text"
-                                name="dip_payment_amount" 
-                                id='dip_payment_amount'
-                                label="Payment Amount"  
-                                component={inputField}
-                                containerclass='col-md-6'
-                                validate={[requiredPaymentAmount]}
+                        <Field
+                            type="text"
+                            name="dwt_contact_name" 
+                            id='dwt_contact_name'
+                            label="Customer Name"  
+                            component={viewField}
+                            containerclass='col-md-4'                            
                         />
                         <Field
                             type="text"
-                            name="dip_payment_date" 
-                            id='dip_payment_date'
-                            label="Date"  
-                            component={dateField}
-                            containerclass='col-md-6'
-                            validate={[requiredPaymentDate]}
+                            name="dwt_draw_name" 
+                            id='dwt_draw_name'
+                            label="Draw Name"  
+                            component={viewField}
+                            containerclass='col-md-4'
+                        />
+                        <Field
+                            type="text"
+                            name="dwt_draw_book_code" 
+                            id='dwt_draw_book_code'
+                            label="Book Code"
+                            component={viewField}
+                            containerclass='col-md-4'
                         />
                     </div>
-                    <FormButtons listUrl={routes.DRAW_INVOICE_PAYMENT_LIST}/>
+                    <div className="form-row">
+                        <Field
+                            type="number"
+                            name="dwt_installment_step" 
+                            id='dwt_installment_step'
+                            label="Installment Step"  
+                            component={inputField}
+                            containerclass='col-md-4'
+                            // onChange = {(e) => { }
+                        />
+                        <Field
+                            type="text"
+                            name="dwt_actual_withdraw_date" 
+                            id='dwt_actual_withdraw_date'
+                            label="Actual Withdraw Date"  
+                            component={dateField}
+                            containerclass='col-md-4'
+                        />
+                        <Field
+                            type="text"
+                            name="dwt_withdraw_date" 
+                            id='dwt_withdraw_date'
+                            label="Withdraw Date"  
+                            component={dateField}
+                            containerclass='col-md-4'
+                        />
+                        <Field
+                            type="text"
+                            name="dwt_is_withdrawed" 
+                            id='dwt_is_withdrawed'
+                            label="Is Withdrawed"  
+                            //component={selectField}
+                            component={inputField}
+                            //defaultValue = {JSON.stringify(this.state.sel_auction_dropdown)}
+                            //data={JSON.stringify(this.props.auction_dropdown)}
+                            containerclass='col-md-4'
+                            //validate={[requiredAuctionMaster]}
+                            //onChange = { (e) => {this.handleChangeAuction(e,this.props)}}
+                        />
+                        <Field
+                            type="text"
+                            name="dwt_receivable_amount" 
+                            id='dwt_receivable_amount'
+                            label="Receivable Amount"  
+                            component={viewField}
+                            containerclass='col-md-4'
+                        />
+                        <Field
+                            type="text"
+                            name="dwt_payable_amount" 
+                            id='dwt_payable_amount'
+                            label="Payable Amount"
+                            component={viewField}
+                            containerclass='col-md-4'
+                        />
+                    </div>
+                    
+                    <FormButtons listUrl={routes.DRAW_MASTER_TRANS_LIST_URL+`/${parID}`}/>
                 </form>
             </div>
         );

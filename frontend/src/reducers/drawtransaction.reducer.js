@@ -45,7 +45,7 @@ export function drawtransaction(state = initialState, action) {
                 error: ''
             };
         case drawtransactionConstants.GET_LIST_SUCCESS:
-            return {
+        return {
                 ...state,
                 list_data: action.data.data,
                 loading: false,

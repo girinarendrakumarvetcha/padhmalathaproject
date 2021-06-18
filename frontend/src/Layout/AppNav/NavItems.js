@@ -4,6 +4,11 @@ export const ManagementNav = [
         label: 'Users',
         to: '/user/index',
     },
+    {
+        icon: 'pe-7s-rocket',
+        label: 'Site Page',
+        to: '/site_page/index',
+    },
 ];
 
 export const ContactsNav = [

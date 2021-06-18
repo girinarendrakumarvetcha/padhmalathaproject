@@ -70,7 +70,6 @@ function getAmtCatalogueDropdown() {
     
     try {
       const data = yield call(() => api.amtCatalogueDropdown());
-      console.log(data);
       if (data && data.data.success) {
         yield put(amtcatalogueActions.getAmtCatalogueDropdownSuccess(data.data));
       } else {

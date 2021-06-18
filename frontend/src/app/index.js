@@ -41,7 +41,10 @@ function App() {
                         <Route path={`${routes.DRAW_INVOICE_LIST}`} exact component={modulelist.DrawInvoiceList} />
                         <Route path={`${routes.DRAW_INVOICE_PAYMENT_LIST}`} exact component={modulelist.DrawInvoicePaymentList} />
                         <Route path={`${routes.DRAW_INVOICE_PAYMENT_ADD_URL}`} exact component={modulelist.DrawInvoicePaymentInsert} />
-                        <Route path={`${routes.DRAW_MASTER_TRANS_LIST}`} exact component={modulelist.DrawMasterTransList} />
+                        <Route path={`${routes.DRAW_MASTER_TRANS_LIST}`} exact component={modulelist.DrawTransactionList} />
+                        <Route path={`${routes.DRAW_MASTER_TRANS_ADD}`} exact component={modulelist.DrawTransactionInsert} />
+                        <Route path={`${routes.DRAW_MASTER_TRANS_UPDATE}`} exact component={modulelist.DrawTransactionInsert} />
+                        <Route path={`${routes.SITE_PAGE_LIST}`} exact component={modulelist.SitePageList} />
                         {/* <Route path={`${routes.CUSTOMER_GROUP_ADD}`} exact component={modulelist.CustomerGroupInsert} /> */}
                      </Switch>
                 </div>      

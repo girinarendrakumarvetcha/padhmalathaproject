@@ -13,9 +13,10 @@ class DrawInvoicePaymentInsert extends Component {
     handleIncludeDrawInvoicePayment = (data) => {
         const url_params = this.props.match.params;
         console.log(data);
-        apis.insertDrawInvoicePayment(data).then(res => {            
-            this.props.history.push(`${routes.DRAW_INVOICE_PAYMENT_LIST}`);
-        });
+        
+        // apis.insertDrawInvoicePayment(data).then(res => {            
+        //     this.props.history.push(`${routes.DRAW_INVOICE_PAYMENT_LIST}`);
+        // });
         // if(url_params.id !== undefined){
         //     apis.updateDrawInvoicePaymentById(url_params.id,data).then(res => {
         //         this.props.history.push(`${routes.DRAW_INVOICE_PAYMENT_LIST}`);
@@ -28,12 +29,15 @@ class DrawInvoicePaymentInsert extends Component {
 
         const {
             match: {
-                params: { id }
+                params: { id , id2 }
             },
             dispatch
-        } = this.props
-
-        if (id) {
+        } = this.props;
+        if(typeof data.dip_draw_invoice == 'undefined'){
+            data['dip_draw_invoice'] = id;
+        }      
+        
+        if (id2) {
 
             dispatch(savePaymentDetailsRequest({data,id,history}));
             // apis.updatePaymentById(url_params.id, data).then(res => {
@@ -53,7 +57,8 @@ class DrawInvoicePaymentInsert extends Component {
             match: {
                 params: { id }
             },
-            dispatch
+            dispatch,
+            change
         } = this.props;
 
         dispatch(resetPaymentDetails());
@@ -61,7 +66,9 @@ class DrawInvoicePaymentInsert extends Component {
             dispatch(getPaymentDetailsRequest(id));
         }
         this.setState({ ...this.props.form_data });
-        dispatch(initialize('customer_form', this.props.form_data));
+                
+        dispatch(initialize('draw_invoice_payment_form', this.props.form_data));
+        //this.props.change('dip_draw_invoice',id);
 
         // if(url_params.id !== undefined){
         //     dispatch(getPaymentDetailsRequest(url_params.id));

@@ -6,7 +6,7 @@ import { formColumns } from "../../config/listingColumns";
 import CusLisToolBarBtns from "../../helpers/listingCustomToolbar";
 import ListingActionBtns from "../../Layout/AppMain/ListingActionBtns";
 import MUIDataTable from "mui-datatables";
-import { getCustomerListRequest, resetCustomerDetails } from '../../actions/customer';
+import { getPaymentListRequest, resetPaymentDetails } from '../../actions/payment';
 
 const formColumnsShortCode = formColumns(
   {
@@ -42,6 +42,7 @@ const formColumnsPaidDate = formColumns(
 class DrawInvoicePaymentList extends Component {
     constructor(props){
         super(props);
+        //debugger;
         this.state = {
                 deleteAlert: false,
                 selectedId: [],
@@ -104,13 +105,22 @@ class DrawInvoicePaymentList extends Component {
     }
 
     componentDidMount = async () => {
-      console.log(this.props.match);
-      const url_params = this.props.match.params;
-        await apis.getDrawInvoicePaymentList(url_params.id).then(dip_data => {
-            this.setState({
-              dip_data : dip_data.data.data,
-          })
-        });
+      // console.log(this.props.match);
+      // const url_params = this.props.match.params;
+      //   await apis.getDrawInvoicePaymentList(url_params.id).then(dip_data => {
+      //       this.setState({
+      //         dip_data : dip_data.data.data,
+      //     })
+      //   });
+
+      const {
+        match: {
+            params: { id }
+          },
+          dispatch
+      } = this.props;
+        dispatch(resetPaymentDetails());
+        dispatch(getPaymentListRequest({id:id}));
     }
 
     render() {

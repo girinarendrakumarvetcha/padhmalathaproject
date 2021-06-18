@@ -29,15 +29,16 @@ function savePaymentDetails() {
 
       const { data , id , history } = actions.payload;
       console.log(actions);
-      let response = {};
+      let response = {};    
       if(typeof id != 'undefined' && id){
-        response = yield call(() => api.updatePaymentById(id, data));
+        response = yield call(() => api.updateDrawInvoicePaymentById(id, data));
       }else{
-        response = yield call(() => api.insertPayment(data));
+        response = yield call(() => api.insertDrawInvoicePayment(data));
       }
       if (response && response.data.success) {
         yield put(paymentActions.savePaymentDetailsSuccess(response.data));
-        history.push(`${routes.Payment_LIST}`);
+        history.push(`${routes.DRAW_INVOICE_UPDATE_URL}`+data.dip_draw_invoice);
+        window.location.reload();
         //yield put(push(`${routes.Payment_LIST}`));
       } else {
         yield put(paymentActions.savePaymentDetailsFailure(response));
@@ -48,11 +49,12 @@ function savePaymentDetails() {
   };
 }
 
-function getPaymentList() {
+function getPaymentList(payload) {
   
   return function*(actions) {
     try {
-      const data = yield call(() => api.getDrawInvoicePaymentList());
+      const { id } = actions.payload;
+      const data = yield call(() => api.getDrawInvoicePaymentList(id));
       if (data && data.data.success) {
         yield put(paymentActions.getPaymentListSuccess(data.data));
       } else {

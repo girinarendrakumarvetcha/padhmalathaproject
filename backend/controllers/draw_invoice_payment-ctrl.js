@@ -46,6 +46,8 @@ createDrawInvoicePayment = async (req,res) => {
     // req_obj['updatedBy']  = body.dip_;    
     // req_obj['updatedDate']  = body.dip_;
     const draw_invoice_payment = new Draw_invoice_payment(req_obj);
+    console.log(draw_invoice_payment);
+
     draw_invoice_payment.save(function(err,result){
         console.log(err);  
         const statuscode = (err)?400:200; 
@@ -68,20 +70,16 @@ createDrawInvoicePayment = async (req,res) => {
         // console.log(di_data['paidAmount']);
         // console.log(paid_amount + paind_amt['paid_amount']);
         // console.log(paind_amt);
-        di_data.save(function(err,result){
-            console.log(err);
-            // const statuscode = (err)?400:200;   
-            // return res.status(statuscode).json({
-            //     err,
-            //     result,
-            //     message: 'Invoice updated successfully.'
-            // });
+        di_data.save(function(err,data){
+            const statuscode = (err)?400:200;   
+            return res.status(statuscode).json({
+                err,
+                data,
+                success:true,
+                message: 'Payment Added successfully'
+            });
         });
     });
-
-    // return res.status(200).json({
-    //     message: 'Record saved successfully.'
-    // });
 
 } 
 updateDrawInvoicePayment = async (req,res) => {

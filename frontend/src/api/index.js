@@ -1,10 +1,10 @@
-import axios from 'axios'
+import axios from 'axios';
 
 const api = axios.create({
     //baseURL: 'http://localhost:8080/api',
     baseURL: 'http://'+window.location.hostname+':8080/api',
     //baseURL: 'http://192.168.1.2:8080/api',
-})
+});
 
 const insertCustomer     = payload => api.post(`/customer`, payload);
 const getAllCustomers    = () => api.get(`/customers`);
@@ -49,11 +49,12 @@ const drawInvoicePaymentFetch = (id) => api.get(`/draw_invoice_payment/fetch/${i
 const insertDrawInvoicePayment = (payload) => api.post(`/draw_invoice_payment/add`,payload);
 const getDrawInvoicePaymentList = (id) => api.get(`/draw_invoice_payment/list/${id}`);
 const updateDrawInvoicePaymentById = (id, payload) => api.put(`/draw_invoice_payment/update/${id}`, payload);
-const drawMasterTransFetch = (id) => api.get(`/draw_master_trans/fetch/${id}`);
+const drawTransactionRecordFetch = (id) => api.get(`/draw_master_trans/fetch/${id}`);
 const insertDrawMasterTrans = (payload) => api.post(`/draw_master_trans/add`,payload);
 const getDrawMasterTransList = (id) => api.get(`/draw_master_trans/list/${id}`);
-const updateDrawMasterTransById = (id, payload) => api.put(`/draw_master_trans/update/${id}`, payload);
+const updateDrawTransactionById = (id, payload) => api.put(`/draw_master_trans/update/${id}`, payload);
 const getRecordTransactionCode = (code) => api.get(`/getrecordcode/${code}`);
+const getSitePageSearch = (payload) => api.get(`/site_page/search/${payload}`);
 const apis = {
     insertCustomer,
     getAllCustomers,
@@ -96,12 +97,13 @@ const apis = {
     insertDrawInvoicePayment,
     getDrawInvoicePaymentList,
     updateDrawInvoicePaymentById,
-    drawMasterTransFetch,
+    drawTransactionRecordFetch,
     insertDrawMasterTrans,
     getDrawMasterTransList,
-    updateDrawMasterTransById,
+    updateDrawTransactionById,
     getRecordTransactionCode,
-    auctionDetailsFetch
+    auctionDetailsFetch,
+    getSitePageSearch
 }
 
 export default apis;

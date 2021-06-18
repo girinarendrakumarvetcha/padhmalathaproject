@@ -97,6 +97,18 @@ function setAuctionTransData() {
     }
   };
 }
+function setAuctionUpdateData() {
+  
+  return function*(actions) {
+    debugger;
+    try {
+      const { payload } = actions;
+      yield put(auctionActions.setUpdateDataSuccess(payload));
+    } catch (error) {
+      yield put(auctionActions.setUpdateDataFailure(error));
+    }
+  };
+}
 
 function noAction(){
   return function*(actions){};
@@ -107,6 +119,7 @@ export function* AuctionsWatcher() {
   yield takeLatest(auctionConstants.GET_LIST_REQUEST, getAuctionList());
   yield takeLatest(auctionConstants.FORM_DROPDOWN_REQUEST, getAuctionDropdown());
   yield takeLatest(auctionConstants.SET_TRANS_DATA_REQUEST, setAuctionTransData());
+  yield takeLatest(auctionConstants.SET_UPDATE_DATA_REQUEST, setAuctionUpdateData());
   // yield takeLatest(auctionConstants.RESET_DETAILS, noAction());
 }
 

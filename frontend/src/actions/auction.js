@@ -109,3 +109,24 @@ export function setTransDataFailure(error) {
     error
   };
 }
+
+export function setUpdateDataRequest(payload) {
+  return {
+    type: auctionConstants.SET_TRANS_DATA_REQUEST,
+    payload
+  };
+}
+
+export function setUpdateDataSuccess(data) {
+  return {
+    type: auctionConstants.SET_TRANS_DATA_SUCCESS,
+    data
+  };
+}
+
+export function setUpdateDataFailure(error) {
+  return {
+    type: auctionConstants.SET_TRANS_DATA_FAILURE,
+    error
+  };
+}

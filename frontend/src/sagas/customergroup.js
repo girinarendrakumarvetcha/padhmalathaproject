@@ -72,7 +72,7 @@ function getCustomerGroupDropdown() {
     
     try {
       const data = yield call(() => api.drawGroupDropdown());
-      console.log(data);
+      //console.log(data);
       if (data && data.data.success) {
         yield put(customergroupActions.getCustomerGroupDropdownSuccess(data.data));
       } else {

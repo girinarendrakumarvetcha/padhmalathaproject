@@ -68,6 +68,7 @@ CustomerForm = reduxForm({
     enableReinitialize: true
 })(CustomerForm);
 
+
 const mapStateToProps = state => {
     return {};
   };

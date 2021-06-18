@@ -81,17 +81,45 @@ createAuction = async (req, res) => {
     const trans_arr = [];
     const step_arr = [];
     const receivable_arr = [];
+    const commission_arr = [];
     const payable_arr = [];
+    const actual_installment_amount_arr = [];
+    const draw_bonus_arr = [];
+    const member_bonus_arr = [];
+    const final_installment_amount_arr = [];
+    const draw_type_arr = [];
+    
     for (var i in body) {
 
         if (i.indexOf('amt_installment_step_no_') != -1) {
-            step_arr[i] = body[i];
+            variable = i.replace('amt_installment_step_no_','');
+            step_arr[variable] = variable;
         }
         else if (i.indexOf('amt_receivable_amount_') != -1) {
+            variable = i.replace('amt_receivable_amount_','');
+            step_arr[variable] = variable;
             receivable_arr[i] = body[i];
         }
         else if (i.indexOf('amt_payable_amount_') != -1) {
             payable_arr[i] = body[i];
+        }
+        else if (i.indexOf('amt_commission_amount_') != -1) {
+            commission_arr[i] = body[i];
+        }
+        else if (i.indexOf('amt_actual_installment_amount_') != -1) {
+            actual_installment_amount_arr[i] = body[i];
+        }
+        else if (i.indexOf('amt_draw_bonus_') != -1) {
+            draw_bonus_arr[i] = body[i];
+        }
+        else if (i.indexOf('amt_member_bonus_') != -1) {
+            member_bonus_arr[i] = body[i];
+        }
+        else if (i.indexOf('amt_final_installment_amount_') != -1) {
+            final_installment_amount_arr[i] = body[i];
+        }
+        else if (i.indexOf('amt_draw_type_') != -1) {
+            draw_type_arr[i] = body[i];
         }
         else {
             ins_arr[i] = body[i];
@@ -104,30 +132,41 @@ createAuction = async (req, res) => {
         trans_arr.push({
             'installmentStepNo': variable_index_inc,
             'receivableAmount': receivable_arr['amt_receivable_amount_' + variable_index],
-            'payableAmount': payable_arr['amt_payable_amount_' + variable_index]
+            'payableAmount': payable_arr['amt_payable_amount_' + variable_index],
+            'commissionAmount': commission_arr['amt_commission_amount_' + variable_index],
+            'actualInstallmentAmount': actual_installment_amount_arr['amt_actual_installment_amount_' + variable_index],
+            'drawBonus': draw_bonus_arr['amt_draw_bonus_' + variable_index],
+            'memberBonus': member_bonus_arr['amt_member_bonus_' + variable_index],
+            'finalInstallmentAmount': final_installment_amount_arr['amt_final_installment_amount_' + variable_index],
+            'drawType': draw_type_arr['amt_draw_type_' + variable_index],
+            'isInvoiceGenerated': 'No',
         });
     }
-
+    
     const req_obj = {};
     req_obj['name'] = ins_arr.ma_name;
     req_obj['printName'] = ins_arr.ma_print_name;
-    req_obj['amtCatalogueId'] = ins_arr.ma_amt_catalog.value;
+    req_obj['shortCode'] = ins_arr.ma_short_code;
+    req_obj['amtCatalogueId'] = ins_arr.ma_amt_catalogue.value;
+    req_obj['amtCatalogueData'] = ins_arr.ma_amt_catalogue;
     req_obj['auctionAmount'] = ins_arr.ma_auction_amount;
     req_obj['defineType'] = ins_arr.ma_define_type.value;
+    req_obj['defineTypeData'] = ins_arr.ma_define_type;
     req_obj['auctionInstallments'] = ins_arr.ma_auction_installments;
     req_obj['definedInstallments'] = ins_arr.ma_defined_installments;
     req_obj['intervalCycle'] = ins_arr.ma_interval_period.value;
     req_obj['intervalDays'] = ins_arr.ma_interval_period.interval;
+    req_obj['intervalData'] = ins_arr.ma_interval_period;
     req_obj['commissionAmt'] = ins_arr.ma_commission;
     req_obj['totalComAmt'] = ins_arr.ma_auction_installments * ins_arr.ma_commission;
     req_obj['installmentAmt'] = ins_arr.ma_installment_amount;
     req_obj['beforeWithDraw'] = ins_arr.ma_before_withdraw_amount;
     req_obj['afterWithDraw'] = ins_arr.ma_after_withdraw_amount;
     req_obj['bonusAmount'] = ins_arr.ma_bonus_amount;
-    let transaction_arr =  await recordTransactionMasterCtrl.getRecordTransactionByValue('auction');
-    req_obj['shortCode'] = (transaction_arr.prefixCode+(Number(transaction_arr.suffixCode) +1));
-    //req_obj['shortCode'] = ins_arr.ma_short_code;
+    // let transaction_arr =  await recordTransactionMasterCtrl.getRecordTransactionByValue('auction');
+    // req_obj['shortCode'] = (transaction_arr.prefixCode+(Number(transaction_arr.suffixCode) +1));
     req_obj['status'] = ins_arr.ma_status.value;
+    req_obj['statusData'] = ins_arr.ma_status;
     //req_obj['addedBy']              = 1;
     //req_obj['addedDate']            = Date.now;
     //req_obj['isVariableAmount']   = body.ma_name;
@@ -135,9 +174,9 @@ createAuction = async (req, res) => {
     // req_obj['updatedBy']         = body.ma_name
     // req_obj['updatedDate']       = body.ma_name
     req_obj['transactionData'] = trans_arr;
-    //console.log(req_obj);
+    console.log(req_obj.toString());
     const auction_master = new Master_auction(req_obj);
-    console.log(auction_master);
+    console.log(auction_master.toString());
     if (!auction_master) {
         return res.status(400).json({
             success: false,
@@ -147,13 +186,13 @@ createAuction = async (req, res) => {
     
     auction_master.save(function (err, data) {        
         const statuscode = (err) ? 400 : 200;
-        if(!err){
-          Record_transaction_master.findOneAndUpdate({
-                query:{moduleCode: 'auction'},
-                update: {$inc:{suffixCode:1}},
-                    new:true
-                 });
-        }
+        // if(!err){
+        //   Record_transaction_master.findOneAndUpdate({
+        //         query:{moduleCode: 'auction'},
+        //         update: {$inc:{suffixCode:1}},
+        //             new:true
+        //          });
+        // }
         return res.status(statuscode).json({
             err,
             data,
@@ -184,47 +223,53 @@ updateAuction = async (req, res) => {
         for (var i in body) {
 
             if (i.indexOf('amt_installment_step_no_') != -1) {
-                step_arr[i] = body[i];
+                variable = i.replace('amt_installment_step_no_','');
+                step_arr[variable] = variable;
             }
             else if (i.indexOf('amt_receivable_amount_') != -1) {
+                variable = i.replace('amt_receivable_amount_','');
+                step_arr[variable] = variable;
                 receivable_arr[i] = body[i];
             }
             else if (i.indexOf('amt_payable_amount_') != -1) {
                 payable_arr[i] = body[i];
             }
-            else {
-                ins_arr[i] = body[i];
-            }
         }
+        console.log(step_arr);
         for (var i in step_arr) {
             const variable_index = i.replace('amt_installment_step_no_', '');
             variable_index_inc = Number(variable_index) + 1;
             trans_arr.push({
-                'installmentStepNo': step_arr['amt_installment_step_no_' + variable_index],
+                'installmentStepNo': variable_index_inc,
                 'receivableAmount': receivable_arr['amt_receivable_amount_' + variable_index],
                 'payableAmount': payable_arr['amt_payable_amount_' + variable_index]
             });
         }
-
+        console.log(auction_master);
         auction_master['name'] = body.ma_name;
         auction_master['printName']             = body.ma_print_name;
-        auction_master['amtCatalogueId']           = body.ma_amt_catalog.value;
+        auction_master['shortCode']             = body.ma_short_code;
+        auction_master['amtCatalogueId']        = body.ma_amt_catalogue.value;
+        auction_master['amtCatalogueData']      = body.ma_amt_catalogue;
+        auction_master['defineType']            = body.ma_define_type.value;
+        auction_master['defineTypeData']        = body.ma_define_type;
         auction_master['auctionAmount']         = body.ma_auction_amount;
         auction_master['auctionInstallments']   = body.ma_auction_installments;
         auction_master['definedInstallments']   = body.ma_defined_installments;
         auction_master['intervalCycle']         = body.ma_interval_period.value;
         auction_master['intervalDays']          = body.ma_interval_period.interval;
+        auction_master['intervalData']          = body.ma_interval_period;
         auction_master['beforeWithDraw']        = body.ma_before_withdraw_amount;
         auction_master['afterWithDraw']         = body.ma_after_withdraw_amount;
         auction_master['bonusAmount']           = body.ma_bonus_amount;
-        auction_master['shortCode']             = body.ma_short_code;
         auction_master['status']                = body.ma_status.value;
+        auction_master['statusData']            = body.ma_status;
         auction_master['commissionAmt']         = body.ma_commission;
         auction_master['totalComAmt']           = body.ma_auction_installments * body.ma_commission;
         auction_master['installmentAmt']        = body.ma_installment_amount;
         auction_master['transactionData']       = trans_arr;
 
-        //console.log(auction_master);
+        console.log(auction_master);
         auction_master.save(function(err,data){
             const statuscode = (err)?400:200;   
             return res.status(statuscode).json({
@@ -291,12 +336,15 @@ getAuctionById = async (req, res) => {
         auction_master_data['ma_name'] = auction_master['name'];
         auction_master_data['ma_print_name'] = auction_master['printName'];
         auction_master_data['ma_amt_catalog_id'] = auction_master['amtCatalogueId'];
+        auction_master_data['ma_amt_catalogue'] = auction_master['amtCatalogueData'];
         auction_master_data['ma_auction_amount'] = auction_master['auctionAmount'];
-        auction_master_data['ma_define_type'] = auction_master['defineType'];
+        auction_master_data['ma_define_type_id'] = auction_master['defineType'];
+        auction_master_data['ma_define_type'] = auction_master['defineTypeData'];
         auction_master_data['ma_auction_installments'] = auction_master['auctionInstallments'];
         auction_master_data['ma_defined_installments'] = auction_master['definedInstallments'];
         auction_master_data['ma_interval_cycle'] = auction_master['intervalCycle'];
         auction_master_data['ma_interval_days'] = auction_master['intervalDays'];
+        auction_master_data['ma_interval_period'] = auction_master['intervalData'];
         auction_master_data['ma_commission'] = auction_master['commissionAmt'];
         auction_master_data['ma_installment_amount'] = auction_master['installmentAmt'];
         auction_master_data['ma_before_withdraw_amount'] = auction_master['beforeWithDraw'];
@@ -320,10 +368,22 @@ getAuctionById = async (req, res) => {
             dummy_arr['amt_installment_step_no_' + i] = auction_master['transactionData'][i]['installmentStepNo'];
             dummy_arr['amt_receivable_amount_' + i] = auction_master['transactionData'][i]['receivableAmount'];
             dummy_arr['amt_payable_amount_' + i] = auction_master['transactionData'][i]['payableAmount'];
+            dummy_arr['amt_commission_amount_' + i] = auction_master['transactionData'][i]['commissionAmount'];
+            dummy_arr['amt_actual_installment_amount_' + i] = auction_master['transactionData'][i]['actualInstallmentAmount'];
+            dummy_arr['amt_draw_bonus_' + i] = auction_master['transactionData'][i]['drawBonus'];
+            dummy_arr['amt_member_bonus_' + i] = auction_master['transactionData'][i]['memberBonus'];
+            dummy_arr['amt_final_installment_amount_' + i] = auction_master['transactionData'][i]['finalInstallmentAmount'];
+            dummy_arr['amt_draw_type_' + i] = auction_master['transactionData'][i]['drawType'];
             trans_arr.push(dummy_arr);
             auction_master_data['amt_installment_step_no_' + i] = auction_master['transactionData'][i]['installmentStepNo'];
             auction_master_data['amt_receivable_amount_' + i] = auction_master['transactionData'][i]['receivableAmount'];
+            auction_master_data['amt_commission_amount_' + i] = auction_master['transactionData'][i]['commissionAmount'];
             auction_master_data['amt_payable_amount_' + i] = auction_master['transactionData'][i]['payableAmount'];
+            auction_master_data['amt_actual_installment_amount_' + i] = auction_master['transactionData'][i]['actualInstallmentAmount'];
+            auction_master_data['amt_draw_bonus_' + i] = auction_master['transactionData'][i]['drawBonus'];
+            auction_master_data['amt_member_bonus_' + i] = auction_master['transactionData'][i]['memberBonus'];
+            auction_master_data['amt_final_installment_amount_' + i] = auction_master['transactionData'][i]['finalInstallmentAmount'];
+            auction_master_data['amt_draw_type_' + i] = auction_master['transactionData'][i]['drawType'];
         }
         auction_master_data['trans_arr'] = trans_arr;
         return res.status(200).json({ success: true, data: auction_master_data })
@@ -409,8 +469,8 @@ getAuctionDetailsForDraw = async (req, res) => {
         const auction_master_data = {};
         auction_master_data['dl_name'] = auction_master['name'];
         auction_master_data['dl_print_name'] = auction_master['printName'];
-        auction_master_data['dl_amt_catalog_id'] = auction_master['amtCatalogueId'];
-        auction_master_data['dl_auction_amount'] = auction_master['auctionAmount'];
+        auction_master_data['dl_amt_catalogue'] = auction_master['amtCatalogueId'];
+        auction_master_data['dl_draw_amount'] = auction_master['auctionAmount'];
         auction_master_data['dl_define_type'] = auction_master['defineType'];
         auction_master_data['dl_draw_installments'] = auction_master['auctionInstallments'];
         auction_master_data['dl_defined_installments'] = auction_master['definedInstallments'];
@@ -436,14 +496,27 @@ getAuctionDetailsForDraw = async (req, res) => {
 
         for (var i in auction_master['transactionData']) {
             var dummy_arr = {};
-            dummy_arr['amt_installment_step_no_' + i] = auction_master['transactionData'][i]['installmentStepNo'];
-            dummy_arr['amt_receivable_amount_' + i] = auction_master['transactionData'][i]['receivableAmount'];
-            dummy_arr['amt_payable_amount_' + i] = auction_master['transactionData'][i]['payableAmount'];
+            dummy_arr['dl_installment_step_no_' + i] = auction_master['transactionData'][i]['installmentStepNo'];
+            dummy_arr['dl_receivable_amount_' + i] = auction_master['transactionData'][i]['receivableAmount'];
+            dummy_arr['dl_payable_amount_' + i] = auction_master['transactionData'][i]['payableAmount'];
+            dummy_arr['dl_commission_amount_' + i] = auction_master['transactionData'][i]['commissionAmount'];
+            dummy_arr['dl_actual_installment_amount_' + i] = auction_master['transactionData'][i]['actualInstallmentAmount'];
+            dummy_arr['dl_draw_bonus_' + i] = auction_master['transactionData'][i]['drawBonus'];
+            dummy_arr['dl_member_bonus_' + i] = auction_master['transactionData'][i]['memberBonus'];
+            dummy_arr['dl_final_installment_amount_' + i] = auction_master['transactionData'][i]['finalInstallmentAmount'];
+            dummy_arr['dl_draw_type_' + i] = auction_master['transactionData'][i]['drawType'];
             trans_arr.push(dummy_arr);
-            auction_master_data['amt_installment_step_no_' + i] = auction_master['transactionData'][i]['installmentStepNo'];
-            auction_master_data['amt_receivable_amount_' + i] = auction_master['transactionData'][i]['receivableAmount'];
-            auction_master_data['amt_payable_amount_' + i] = auction_master['transactionData'][i]['payableAmount'];
+            auction_master_data['dl_installment_step_no_' + i] = auction_master['transactionData'][i]['installmentStepNo'];
+            auction_master_data['dl_receivable_amount_' + i] = auction_master['transactionData'][i]['receivableAmount'];
+            auction_master_data['dl_commission_amount_' + i] = auction_master['transactionData'][i]['commissionAmount'];
+            auction_master_data['dl_payable_amount_' + i] = auction_master['transactionData'][i]['payableAmount'];
+            auction_master_data['dl_actual_installment_amount_' + i] = auction_master['transactionData'][i]['actualInstallmentAmount'];
+            auction_master_data['dl_draw_bonus_' + i] = auction_master['transactionData'][i]['drawBonus'];
+            auction_master_data['dl_member_bonus_' + i] = auction_master['transactionData'][i]['memberBonus'];
+            auction_master_data['dl_final_installment_amount_' + i] = auction_master['transactionData'][i]['finalInstallmentAmount'];
+            auction_master_data['dl_draw_type_' + i] = auction_master['transactionData'][i]['drawType'];
         }
+
         auction_master_data['trans_arr'] = trans_arr;
         return res.status(200).json({ success: true, data: auction_master_data })
     }).catch(err => console.log(err));

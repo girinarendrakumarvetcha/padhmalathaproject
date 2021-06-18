@@ -50,7 +50,13 @@ createDraw = async (req,res) => {
     const trans_arr = [];
     const step_arr = [];
     const receivable_arr = [];
+    const commission_arr = [];
     const payable_arr = [];
+    const actual_installment_amount_arr = [];
+    const draw_bonus_arr = [];
+    const member_bonus_arr = [];
+    const final_installment_amount_arr = [];
+    const draw_type_arr = [];
     //console.log(body);
     for( var i in body ){
         
@@ -63,6 +69,24 @@ createDraw = async (req,res) => {
         else if(i.indexOf('dl_payable_amount_') != -1){
             payable_arr[i] = body[i];
         }
+        else if (i.indexOf('dl_commission_amount_') != -1) {
+            commission_arr[i] = body[i];
+        }
+        else if (i.indexOf('dl_actual_installment_amount_') != -1) {
+            actual_installment_amount_arr[i] = body[i];
+        }
+        else if (i.indexOf('dl_draw_bonus_') != -1) {
+            draw_bonus_arr[i] = body[i];
+        }
+        else if (i.indexOf('dl_member_bonus_') != -1) {
+            member_bonus_arr[i] = body[i];
+        }
+        else if (i.indexOf('dl_final_installment_amount_') != -1) {
+            final_installment_amount_arr[i] = body[i];
+        }
+        else if (i.indexOf('dl_draw_type_') != -1) {
+            draw_type_arr[i] = body[i];
+        }
         else{
             ins_arr[i] = body[i];
         }
@@ -74,24 +98,36 @@ createDraw = async (req,res) => {
         trans_arr.push({
             'installmentStepNo' : step_arr['dl_installment_step_no_'+variable_index],
             'receivableAmount'  : receivable_arr['dl_receivable_amount_'+variable_index],
-            'payableAmount'     : payable_arr['dl_payable_amount_'+variable_index]
+            'payableAmount'     : payable_arr['dl_payable_amount_'+variable_index],
+            'commissionAmount': commission_arr['dl_commission_amount_' + variable_index],
+            'actualInstallmentAmount': actual_installment_amount_arr['dl_actual_installment_amount_' + variable_index],
+            'drawBonus': draw_bonus_arr['dl_draw_bonus_' + variable_index],
+            'memberBonus': member_bonus_arr['dl_member_bonus_' + variable_index],
+            'finalInstallmentAmount': final_installment_amount_arr['dl_final_installment_amount_' + variable_index],
+            'drawType': draw_type_arr['dl_draw_type_' + variable_index],
+            'isInvoiceGenerated': 'No',
         } ); 
     }
-        
+        console.log(ins_arr);
     const req_obj = {};
     req_obj['name']                 = ins_arr.dl_name;
     req_obj['print_name']           = ins_arr.dl_print_name;
     req_obj['auctionMasterId']      = ins_arr.dl_auction_master.value;
+    req_obj['auctionMasterData']      = ins_arr.dl_auction_master;
     req_obj['drawDate']             = ins_arr.dl_draw_date;
     req_obj['drawGroupId']          = ins_arr.dl_draw_group.value;
+    req_obj['drawGroupData']          = ins_arr.dl_draw_group;
     //req_obj['contactCount']         = ins_arr.dl_draw_installments;
     req_obj['isVariableBonus']      = 'No';
     req_obj['printName']            = ins_arr.dl_print_name;
-    req_obj['amtCatlogId']          = ins_arr.dl_amt_catalog.value;
+    req_obj['amtCatalogueId']       = ins_arr.dl_amt_catalogue.value;
+    req_obj['amtCatalogueData']     = ins_arr.dl_amt_catalogue;
     req_obj['drawAmount']           = ins_arr.dl_total_amount;
-    req_obj['installments']         = ins_arr.dl_draw_installments;
+    req_obj['drawInstallments']     = ins_arr.dl_draw_installments;
+    req_obj['definedInstallments']   = ins_arr.dl_defined_installments;
     req_obj['intervalCycle']        = ins_arr.dl_interval_cycle.value;
     req_obj['intervalDays']         = ins_arr.dl_interval_cycle.interval;
+    req_obj['intervalData']         = ins_arr.dl_interval_cycle;
     req_obj['commissionAmt']        = ins_arr.dl_commission;
     req_obj['totalComAmt']          = ins_arr.dl_draw_installments * ins_arr.dl_commission;
     req_obj['installmentAmt']       = ins_arr.dl_installment_amount;
@@ -100,12 +136,13 @@ createDraw = async (req,res) => {
     req_obj['bonusAmount']          = ins_arr.dl_bonus_amount;
     req_obj['shortCode']            = ins_arr.dl_short_code;
     req_obj['status']               = ins_arr.dl_status;
+    req_obj['statusData']               = ins_arr.dl_status;
     req_obj['transactionData']      = trans_arr;
     
-    console.log(req_obj);
+    //console.log(req_obj);
     const draw_master = new Draw_master(req_obj);
     draw_master.save(function(err,result){
-        console.log(err);  
+        //console.log(err);  
         const statuscode = (err)?400:200; 
         // return res.status(statuscode).json({
         //     err,
@@ -116,14 +153,17 @@ createDraw = async (req,res) => {
     let draw_log_trans_arr = [];
     let group_customers_ids  = [];
     await Draw_group.findOne({ _id: ins_arr.dl_draw_group.value }, (err, draw_group) => {
-        group_customers_ids  = draw_group.contactIds.split(',');      
+        console.log(draw_group);
+        group_customers_ids  = draw_group.contactIds;      
+        group_customers_ids  = draw_group['contactIds'];      
     }).catch(err => console.log(err));
     //const invoice_data_arr = [];
+    console.log(group_customers_ids);
     for( var i in group_customers_ids){    
         const dummy_data= {
             drawMasterId        : draw_master._id,
-            contactId           : group_customers_ids[i],
-            drawBookCode        : req_obj['shortCode'] + '00'+ i+1,
+            contactMasterId     : group_customers_ids[i],
+            drawBookCode        : req_obj['shortCode'] + 'BK'+ (Number(i)+1),
             installmentStepNo   : 0,
             actualWithdrawDate  : '',
             withdrawDate        : '',
@@ -138,18 +178,18 @@ createDraw = async (req,res) => {
             Status              : 'Active'
         };
         const draw_master_trans_data = new Draw_master_trans(dummy_data);
-        //console.log(draw_master_trans_data);
+        console.log(draw_master_trans_data);
         draw_master_trans_data.save();
         draw_log_trans_arr.push(draw_master_trans_data);
         //console.log(draw_master);
         const invoice_data_arr = [];
         //console.log(draw_master.installments);
-        for(var j=1; j<= draw_master.installments;j++){
+        for(var j=0; j< draw_master.definedInstallments;j++){
             var invoice_dummy_data = {
                 drawMasterId        : draw_master._id,
                 drawMasterTransId   : draw_master_trans_data._id,
                 contactMasterId     : group_customers_ids[i],
-                installmentStepNo   : j,
+                installmentStepNo   : (Number(j)+1),
                 beforePayableAmount : draw_master.beforeWithDraw,
                 afterPayableAmount  : draw_master.afterWithDraw,
                 bonusAmount         : draw_master.bonusAmount,
@@ -171,13 +211,18 @@ createDraw = async (req,res) => {
             // console.log(invoice_dummy_data);
             // var invoice_data = new Draw_invoice(invoice_dummy_data);
             // console.log(invoice_data);
-            //invoice_data.save();
-
+            // invoice_data.save(function(err,result){
+            //        console.log(err);
+            //        console.log(result); 
+            // })
+            //console.log(D)
             invoice_data_arr.push(invoice_dummy_data);
            
         }
-        //console.log(invoice_data_arr);
-        Draw_invoice.insertMany(invoice_data_arr).then(function(){ 
+        console.log(invoice_data_arr);
+        Draw_invoice.insertMany(invoice_data_arr).then(function(err,data){ 
+            console.log(err);
+            console.log(data);
             console.log("Data inserted")  // Success 
         }).catch(function(error){ 
             console.log(error)      // Failure 
@@ -187,7 +232,9 @@ createDraw = async (req,res) => {
     // //console.log(invoice_data_arr);
     
     return res.status(200).json({
-        message: 'Record saved successfully.'
+        message: 'Record saved successfully.',
+        success : true,
+        data : {}
     });
     
 
@@ -293,13 +340,18 @@ getDrawDataById = async (req, res) => {
         draw_master_data['dl_name']           = auction_master['name'] ;            
         draw_master_data['dl_print_name']     = auction_master['printName'];
         draw_master_data['dl_auction_master']     = auction_master['auctionMasterId'];
-        draw_master_data['dl_amt_catalog_id'] = auction_master['amtCatlogId'] ;
+        draw_master_data['sel_auction_master']     = auction_master['auctionMasterData'];
+        draw_master_data['dl_amt_catalogue_id'] = auction_master['amtCatalogueId'] ;
+        draw_master_data['sel_amt_catalogue'] = auction_master['amtCatalogueData'] ;
         draw_master_data['dl_draw_group']       = auction_master['drawGroupId'] ;
+        draw_master_data['sel_draw_group']       = auction_master['drawGroupData'] ;
         draw_master_data['dl_total_amount']   = auction_master['drawAmount'];
         draw_master_data['dl_draw_amount']   = auction_master['drawAmount'];
-        draw_master_data['dl_draw_installments']   = auction_master['installments'];
+        draw_master_data['dl_draw_installments']   = auction_master['drawInstallments'];
+        draw_master_data['dl_defined_installments']   = auction_master['definedInstallments'];
         draw_master_data['dl_interval_cycle'] = auction_master['intervalCycle'];
         draw_master_data['dl_interval']          = auction_master['intervalDays'];
+        draw_master_data['sel_interval_period']          = auction_master['intervalData'];
         draw_master_data['dl_commission']     = auction_master['commissionAmt'];
         draw_master_data['dl_installment_amount'] = auction_master['installmentAmt'];
         draw_master_data['dl_before_withdraw_amount']   = auction_master['beforeWithDraw'];
@@ -310,13 +362,26 @@ getDrawDataById = async (req, res) => {
         const trans_arr = [];
         for( var i in auction_master['transactionData']  ){
             var dummy_arr = {};
-            dummy_arr['dl_installment_step_no_'+i] = auction_master['transactionData'][i]['installmentStepNo'];
-            dummy_arr['dl_receivable_amount_'+i] = auction_master['transactionData'][i]['receivableAmount'];
-            dummy_arr['dl_payable_amount_'+i] = auction_master['transactionData'][i]['payableAmount'] ;
+            dummy_arr['dl_installment_step_no_' + i] = auction_master['transactionData'][i]['installmentStepNo'];
+            dummy_arr['dl_receivable_amount_' + i] = auction_master['transactionData'][i]['receivableAmount'];
+            dummy_arr['dl_payable_amount_' + i] = auction_master['transactionData'][i]['payableAmount'];
+            dummy_arr['dl_commission_amount_' + i] = auction_master['transactionData'][i]['commissionAmount'];
+            dummy_arr['dl_actual_installment_amount_' + i] = auction_master['transactionData'][i]['actualInstallmentAmount'];
+            dummy_arr['dl_draw_bonus_' + i] = auction_master['transactionData'][i]['drawBonus'];
+            dummy_arr['dl_member_bonus_' + i] = auction_master['transactionData'][i]['memberBonus'];
+            dummy_arr['dl_final_installment_amount_' + i] = auction_master['transactionData'][i]['finalInstallmentAmount'];
+            dummy_arr['dl_draw_type_' + i] = auction_master['transactionData'][i]['drawType'];
+            
             trans_arr.push(dummy_arr);
-            draw_master_data['dl_installment_step_no_'+i] = auction_master['transactionData'][i]['installmentStepNo'];
-            draw_master_data['dl_receivable_amount_'+i] = auction_master['transactionData'][i]['receivableAmount'];
-            draw_master_data['dl_payable_amount_'+i] = auction_master['transactionData'][i]['payableAmount'] ;
+            draw_master_data['dl_installment_step_no_' + i] = auction_master['transactionData'][i]['installmentStepNo'];
+            draw_master_data['dl_receivable_amount_' + i] = auction_master['transactionData'][i]['receivableAmount'];
+            draw_master_data['dl_commission_amount_' + i] = auction_master['transactionData'][i]['commissionAmount'];
+            draw_master_data['dl_payable_amount_' + i] = auction_master['transactionData'][i]['payableAmount'];
+            draw_master_data['dl_actual_installment_amount_' + i] = auction_master['transactionData'][i]['actualInstallmentAmount'];
+            draw_master_data['dl_draw_bonus_' + i] = auction_master['transactionData'][i]['drawBonus'];
+            draw_master_data['dl_member_bonus_' + i] = auction_master['transactionData'][i]['memberBonus'];
+            draw_master_data['dl_final_installment_amount_' + i] = auction_master['transactionData'][i]['finalInstallmentAmount'];
+            draw_master_data['dl_draw_type_' + i] = auction_master['transactionData'][i]['drawType'];
         }
         draw_master_data['trans_arr'] = trans_arr;
         return res.status(200).json({ success: true, data: draw_master_data })

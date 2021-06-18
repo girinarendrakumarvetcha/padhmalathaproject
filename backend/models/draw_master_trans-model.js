@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const DrawMasterTrans = new Schema (
     {
         drawMasterId        : {type: String,required :false},
-        contactId           : {type: String,required :false},
+        contactMasterId     : {type: String,required :false},
         drawBookCode        : {type: String,required :false},
         installmentStepNo   : {type: Number,required :false},
         actualWithdrawDate  : {type: String,required :false},

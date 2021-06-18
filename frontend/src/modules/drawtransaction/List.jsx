@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import apis from '../../api';
 import { routes } from "../../config/routes";
 import { formColumns } from "../../config/listingColumns";
 import CusLisToolBarBtns from "../../helpers/listingCustomToolbar";
 import ListingActionBtns from "../../Layout/AppMain/ListingActionBtns";
 import MUIDataTable from "mui-datatables";
+import { getDrawTransactionListRequest, resetDrawTransactionDetails } from '../../actions/drawtransaction';
 
 const formColumnsDrawBookCode = formColumns(
   {
@@ -60,7 +62,7 @@ const formColumnsPayableAmount = formColumns(
 
 class DrawTransactionList extends Component {
     constructor(props){
-        super(props);
+      super(props);
         this.state = {
                 deleteAlert: false,
                 selectedId: [],
@@ -88,13 +90,15 @@ class DrawTransactionList extends Component {
                           
                           <ListingActionBtns 
                             link={`${routes.DRAW_MASTER_TRANS_EDIT}/${
-                                this.state.dwt_data[index.rowIndex].dwt_id
-                            }`}
+                                this.state.list_data[index.rowIndex].dwt_id
+                            }/${
+                              this.props.list_data[index.rowIndex].dwt_draw_master_id
+                          }`}
                             label='Edit'
                             iconlabel='fa fa-pencil'
                             onClick={() =>
                               this.handleShowDeleteAlert([
-                                this.state.dwt_data[index.rowIndex].dwt_id
+                                this.state.list_data[index.rowIndex].dwt_id
                               ])
                             }
                           />
@@ -127,12 +131,27 @@ class DrawTransactionList extends Component {
 
     componentDidMount = async () => {
       
-      const url_params = this.props.match.params;
-        await apis.getDrawMasterTransList(url_params.id).then(dwt_data => {
-            this.setState({
-              dwt_data : dwt_data.data.data,
-          })
-        });
+      // const url_params = this.props.match.params;
+      //   await apis.getDrawMasterTransList(url_params.id).then(list_data => {
+      //       this.setState({
+      //         list_data : list_data.data.data,
+      //     })
+      //   });
+      const {
+        match: {
+            params: { id }
+          },
+          dispatch
+      } = this.props;
+        dispatch(resetDrawTransactionDetails());
+        dispatch(getDrawTransactionListRequest({id:id}));
+    }
+    static getDerivedStateFromProps = (props, state) => { 
+      
+      return {
+          ...state,
+          list_data : props.list_data
+      }
     }
 
     render() {
@@ -143,7 +162,7 @@ class DrawTransactionList extends Component {
                         title={
                           <h2>Draw Master Trans List</h2>
                         }
-                        data={this.state.dwt_data}
+                        data={this.state.list_data}
                         columns={this.state.columns}
                         options={this.state.options}
                     />
@@ -153,5 +172,11 @@ class DrawTransactionList extends Component {
     }
 }
 
-export default DrawTransactionList;
+const mapStateToProps = state => {
+  return {
+      list_data: state.drawtransaction.list_data,
+  };
+};
+
+export default connect(mapStateToProps)(DrawTransactionList);
 

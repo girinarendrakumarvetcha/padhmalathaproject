@@ -20,6 +20,10 @@ export function auction(state = initialState, action) {
                 loading: false,
                 form_data: [],
                 list_data: [],
+                trans_data: [],
+                dropdown_data: [],
+                sel_amt_catalog_dropdown:{},
+                sel_interval_period : {},
                 error: ''
             };
 
@@ -34,7 +38,7 @@ export function auction(state = initialState, action) {
                 error: ''
             };
         case auctionConstants.GET_FORM_SUCCESS:
-            console.log(recordStatus);  
+            
             let sel_staus_dropdown = {};
             if(action.data.data.ma_status ){
                 for(var a in recordStatus){
@@ -85,8 +89,8 @@ export function auction(state = initialState, action) {
                 list_data: [],
                 error: action.error
             };
-
-
+            
+            
         case auctionConstants.DELETE_REQUEST:
             return {
                 ...state,
@@ -96,23 +100,23 @@ export function auction(state = initialState, action) {
                         : user
                 )
             };
-        case auctionConstants.DELETE_SUCCESS:
+            case auctionConstants.DELETE_SUCCESS:
             return {
                 ...state,
                 items: state.items.filter(user => user.id !== action.id)
             };
         case auctionConstants.DELETE_FAILURE:
-
+            
             return {
                 ...state,
                 items: state.items.map(user => {
                     if (user.id === action.id) {
-
+                        
                         const { deleting, ...userCopy } = user;
 
                         return { ...userCopy, deleteError: action.error };
                     }
-
+                    
                     return user;
                 })
             };
@@ -123,7 +127,7 @@ export function auction(state = initialState, action) {
                 dropdown_data: [],
                 error: ''
             };
-        case auctionConstants.FORM_DROPDOWN_SUCCESS:
+            case auctionConstants.FORM_DROPDOWN_SUCCESS:
             return {
                 ...state,
                 dropdown_data: action.data.data,
@@ -144,7 +148,7 @@ export function auction(state = initialState, action) {
                 trans_data : [],
                 error: ''
             };
-        case auctionConstants.SET_TRANS_DATA_SUCCESS:
+            case auctionConstants.SET_TRANS_DATA_SUCCESS:
             return {
                 ...state,
                 trans_data : action.data,
@@ -158,6 +162,21 @@ export function auction(state = initialState, action) {
                 error: action.error
             };
             
+            case auctionConstants.SET_UPDATE_DATA_REQUEST:
+                return {
+                    ...state, 
+                };
+            case auctionConstants.SET_UPDATE_DATA_SUCCESS:
+                debugger;
+                return {
+                    ...state,
+                    
+                };
+            case auctionConstants.SET_UPDATE_DATA_FAILURE:
+                debugger;
+                return {
+                    ...state,
+                };
         default:
             return state
     }
@@ -165,5 +184,5 @@ export function auction(state = initialState, action) {
 
 // state.merge(
 //     Map({
-//       ...action
+    //       ...action
 //     })

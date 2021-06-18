@@ -13,10 +13,10 @@ import 'react-dropdown/style.css';
 
 export const inputField = props => {
   const noLabelRequired = (props.noLabelRequired)?props.noLabelRequired: false;
-  if(props.input.name === 'amt_installment_step_no_0'){
-    console.log(props);
-    debugger;
-  }
+  // if(props.input.name === 'dip_draw_invoice'){
+  //   console.log(props);
+  //  debugger;
+  // }
   
   return (
     <div className={classnames('form-group', props.containerclass)}>
@@ -24,6 +24,7 @@ export const inputField = props => {
       {!noLabelRequired  && 
         <label className="control-label" htmlFor={props.input.name} >{props.label}</label>
       }
+      
       <input 
             type={props.type}
             name={props.input.name}
@@ -32,6 +33,7 @@ export const inputField = props => {
             id={props.id}
             disabled = {props.disabled}
             readOnly = {props.readOnly}
+            //value={props.defaultValue}
             {...props.input} 
             />
       <div className='validator-content'>
@@ -185,7 +187,19 @@ let default_value = {};
 if(typeof(props.defaultValue) != "undefined" && props.defaultValue != ''){
    default_value = JSON.parse(props.defaultValue);
 }
+// if(typeof(props.staticValue) != "undefined" && props.staticValue != ''){
+//    default_value = JSON.parse(props.staticValue);
+// }
+if(props.input.name == 'ma_amt_catalogue'){
+  console.log(props.defaultValue)
+  console.log(props.staticValue)
+  console.log(props.staticValue === props.defaultValue);
+  console.log(props.data);
+}
 //console.log(props.input.name);
+// console.log(props);
+// console.log(default_value);
+// console.log(JSON.parse(props.data));
 return (
     <div className={classnames('form-group', props.containerclass)}>
       <label className="control-label" htmlFor={props.input.name} >{props.label}</label>
@@ -194,7 +208,8 @@ return (
           maxMenuHeight={"1%"}
           name={props.input.name}
           options={props.data && JSON.parse(props.data)}
-          defaultValue = {Object.keys(default_value).length && default_value}
+          //value = {(Object.keys(default_value).length && props.data) && default_value}
+          //defaultValue = {Object.keys(default_value).length && default_value}
           onChange={props.input.onChange}
           isLoading={props.data ? false : true}
           isClearable={true}

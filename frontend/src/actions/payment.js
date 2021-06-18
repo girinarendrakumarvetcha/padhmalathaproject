@@ -48,10 +48,11 @@ export function savePaymentDetailsFailure(error) {
   };
 }
 
-export function getPaymentListRequest() {
+export function getPaymentListRequest(payload) {
 
   return {
-    type: paymentConstants.GET_LIST_REQUEST
+    type: paymentConstants.GET_LIST_REQUEST,
+    payload
   };
 }
 

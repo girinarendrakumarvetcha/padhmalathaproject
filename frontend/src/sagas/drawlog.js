@@ -37,8 +37,9 @@ function saveDrawLogDetails() {
       }
       if (response && response.data.success) {
         yield put(drawlogActions.saveDrawLogDetailsSuccess(response.data));
-        history.push(`${routes.DrawLog_LIST}`);
+        history.push(`${routes.DRAW_MASTER_LIST}`);
         //yield put(push(`${routes.DrawLog_LIST}`));
+        window.location.reload();
       } else {
         yield put(drawlogActions.saveDrawLogDetailsFailure(response));
      }
