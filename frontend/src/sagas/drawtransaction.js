@@ -9,7 +9,6 @@ import api from "../api";
 function getDrawTransactionDetails() {
   return function*(actions) {
     try {
-      
       const { payload } = actions;
       const response = yield call(() => api.drawTransactionRecordFetch(payload));
       if (response && response.data.success) {
@@ -38,7 +37,8 @@ function saveDrawTransactionDetails() {
       }
       if (response && response.data.success) {
         yield put(drawtransactionActions.saveDrawTransactionDetailsSuccess(response.data));
-        history.push(`${routes.DrawTransaction_LIST}`);
+        history.push(`${routes.DRAW_MASTER_TRANS_LIST}/${data.dwt_draw_master_id}`);
+        window.location.reload();
         //yield put(push(`${routes.DrawTransaction_LIST}`));
       } else {
         yield put(drawtransactionActions.saveDrawTransactionDetailsFailure(response));

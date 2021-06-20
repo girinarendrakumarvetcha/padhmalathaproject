@@ -105,7 +105,7 @@ createDraw = async (req,res) => {
             'memberBonus': member_bonus_arr['dl_member_bonus_' + variable_index],
             'finalInstallmentAmount': final_installment_amount_arr['dl_final_installment_amount_' + variable_index],
             'drawType': draw_type_arr['dl_draw_type_' + variable_index],
-            'isInvoiceGenerated': 'No',
+            'isInvoiceGenerated': 'Yes',
         } ); 
     }
         console.log(ins_arr);
@@ -370,6 +370,7 @@ getDrawDataById = async (req, res) => {
             dummy_arr['dl_draw_bonus_' + i] = auction_master['transactionData'][i]['drawBonus'];
             dummy_arr['dl_member_bonus_' + i] = auction_master['transactionData'][i]['memberBonus'];
             dummy_arr['dl_final_installment_amount_' + i] = auction_master['transactionData'][i]['finalInstallmentAmount'];
+            dummy_arr['dl_is_invoice_generated_' + i] = auction_master['transactionData'][i]['isInvoiceGenerated'];
             dummy_arr['dl_draw_type_' + i] = auction_master['transactionData'][i]['drawType'];
             
             trans_arr.push(dummy_arr);
@@ -381,6 +382,7 @@ getDrawDataById = async (req, res) => {
             draw_master_data['dl_draw_bonus_' + i] = auction_master['transactionData'][i]['drawBonus'];
             draw_master_data['dl_member_bonus_' + i] = auction_master['transactionData'][i]['memberBonus'];
             draw_master_data['dl_final_installment_amount_' + i] = auction_master['transactionData'][i]['finalInstallmentAmount'];
+            draw_master_data['dl_is_invoice_generated_' + i] = auction_master['transactionData'][i]['isInvoiceGenerated'];
             draw_master_data['dl_draw_type_' + i] = auction_master['transactionData'][i]['drawType'];
         }
         draw_master_data['trans_arr'] = trans_arr;

@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import apis from '../../api';
 import { routes } from "../../config/routes";
 import DrawLogForm from './Form';
+import PageTitle from '../../Layout/AppMain/FormPageTitle';
 import { saveDrawLogDetailsRequest, getDrawLogDetailsRequest, resetDrawLogDetails } from '../../actions/drawlog';
 import { getAmtCatalogueDropdownRequest} from '../../actions/amtcatalogue';
 import { getAuctionDropdownRequest} from '../../actions/auction';
@@ -54,7 +55,10 @@ class DrawLogInsert extends Component {
        
     render(){
         return (
-            <DrawLogForm  onSubmit={this.handleDrawLogInsert}  {...this.props} />
+            <React.Fragment>
+                <PageTitle heading='Draw Log' />
+                <DrawLogForm  onSubmit={this.handleDrawLogInsert}  {...this.props} />
+            </React.Fragment>
         );
     }
 };

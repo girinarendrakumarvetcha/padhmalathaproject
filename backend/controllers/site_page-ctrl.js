@@ -41,6 +41,23 @@ getSitePageSearch = async (req, res) => {
                         }
                     },
                     {
+                        $addFields: {
+                                    contactMasterId: { $toObjectId: "$contactMasterId" }
+                            }
+                    },
+                    {
+                            $lookup:
+                            {
+                                    from: "contact_master",
+                                    localField: "contactMasterId",
+                                    foreignField: "_id",
+                                    as: "customer_details"
+                            }
+                    },
+                    {
+                            $unwind : '$customer_details'
+                    },
+                    {
                         $lookup: 
                         {
                             from: "draw_invoice",
@@ -91,6 +108,7 @@ getSitePageSearch = async (req, res) => {
         if (err) {
          return res.status(400).json({ success: false, error: err })
      }
+     //console.log(JSON.stringify(site_page_search));
      if (!site_page_search) {
          return res
              .status(404)

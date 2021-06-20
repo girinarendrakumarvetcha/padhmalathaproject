@@ -330,9 +330,10 @@ class DrawLogForm extends Component {
     }
     static getDerivedStateFromProps(props, state) {
 
-        
+        console.log(props);
         return {
-            interval_dropdown: props.interval_period
+            interval_dropdown: props.interval_period,
+            //trans_arr : props.trans_data
         }
 
         return null;
@@ -546,7 +547,7 @@ class DrawLogForm extends Component {
                             containerclass='col-md-4'
                         />
                     </div>
-                    {this.state.trans_arr.length > 0 &&
+                    {this.props.trans_arr.length > 0 &&
                         <div className="form-row">
                             <h2>Details</h2>
                             <table className='table table-bordered'>
@@ -565,7 +566,7 @@ class DrawLogForm extends Component {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    {this.state.trans_arr.map((val, index) => (
+                                    {this.props.trans_arr.map((val, index) => (
 
                                         <TrComponent rowId={index} index={index} key={index} />
                                     ))}
@@ -583,20 +584,19 @@ class DrawLogForm extends Component {
 //     form: 'draw_log_forms'
 //   })(DrawLogForm);
 
-
 DrawLogForm = reduxForm({
     form: 'draw_log_forms',
     enableReinitialize: true
 })(DrawLogForm);
 
 const mapStateToProps = state => {
-
+    console.log()
     return {
         record_status: state.customdropdown.recordStatus,
         dl_catalog_dropdown: state.amtcatalogue.dropdown_data,
         auction_dropdown: state.auction.dropdown_data,
         draw_group_dropdown: state.customergroup.dropdown_data,
-        trans_arr: state.auction.trans_data,
+        trans_arr: state.drawlog.trans_data,
         sel_dl_catalog_dropdown: state.drawlog.sel_dl_catalog_dropdown,
         sel_interval_period: state.drawlog.sel_interval_period,
         interval_period: state.customdropdown.intervalPeriod,

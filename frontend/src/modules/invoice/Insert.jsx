@@ -68,7 +68,10 @@ class DrawInvoiceInsert extends Component {
     }
     render(){
         return (
-            <DrawInvoiceForm  onSubmit={this.handleDrawInvoiceInsert} {...this.props} />
+            <React.Fragment>
+                <PageTitle heading='Draw Invoice' />
+               <DrawInvoiceForm  onSubmit={this.handleDrawInvoiceInsert} {...this.props} />
+            </React.Fragment>
         );
     }
 };

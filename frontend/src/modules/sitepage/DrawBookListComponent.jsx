@@ -1,18 +1,22 @@
 
 import React, { Component } from 'react';
+import { NavLink } from "react-router-dom";
+import { routes } from "../../config/routes";
 import DrawInvoiceComponent from './DrawInvoiceComponent';
+
 class TrComponent extends Component {
     render() {
         const { rowId, columnData, index, onClickFun } = this.props;
         return (
             <tr className={`drawbook-row-${index}`} key={index} onClick={onClickFun} >
-            <td>{columnData.contactMasterId}</td>
+            <td>{columnData.customer_details['name']}</td>
             <td>{columnData.drawBookCode}</td>
             <td>{columnData.withdrawDate}/{columnData.actualWithdrawDate}</td>
             <td>{columnData.installmentStepNo}</td>
             <td>{columnData.isWithdrawed}</td>
             <td>{columnData.receivableAmount}</td>
             <td>{columnData.payableAmount}</td>
+            <td><NavLink to={`${routes.DRAW_MASTER_TRANS_EDIT}/${columnData._id}/${columnData.drawMasterId}`}>Edit</NavLink></td>
         </tr>            
         );
     }
@@ -59,6 +63,7 @@ class DrawBookComponent extends Component {
                         <th>Withdraw Status</th>
                         <th>Amount receivable</th>
                         <th>Amount payable</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>

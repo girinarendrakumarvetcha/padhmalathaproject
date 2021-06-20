@@ -23,7 +23,7 @@ getDrawMasterTransList = async (req, res) => {
                 foreignField: "_id",
                 as: "customer_details"
             }
-        }
+        },
     ]).exec((err, dwt_data) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
@@ -173,6 +173,7 @@ updateDrawMasterTrans = async (req, res) => {
                             return res.status(200).json({
                                         err,
                                         data,
+                                        success:true,
                                         message: 'Invoices updated successfully.'
                                     });
                         });

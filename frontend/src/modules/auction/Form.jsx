@@ -117,7 +117,7 @@ class TrComponent extends Component {
                     component={inputField}
                     //validate={[requiredFinalAmount]}
                 /></td>
-                <td><Field
+                {/* <td><Field
                     type="text"
                     name={`amt_is_invoice_generated_${rowId}`}
                     id={`amt_is_invoice_generated_${rowId}`}
@@ -125,7 +125,7 @@ class TrComponent extends Component {
                     noLabelRequired={true}
                     component={inputField}
                     //validate={[requiredIsInvoiceGenerated]}
-                /></td>
+                /></td> */}
                 <td><Field
                     type="text"
                     name={`amt_draw_type_${rowId}`}
@@ -451,7 +451,7 @@ class AuctionForm extends Component {
                                     <th>Draw Bonus</th>
                                     <th>Member Bonus</th>
                                     <th>Final Installment  Amount</th>
-                                    <th>Is Invoice Generated</th>
+                                    {/* <th>Is Invoice Generated</th> */}
                                     <th>Draw Type</th>
                                 </tr>
                             </thead>

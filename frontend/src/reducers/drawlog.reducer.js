@@ -3,6 +3,7 @@ const initialState = {
     loading: false,
     form_data: [],
     list_data: [],
+    trans_data: [],
     error: ''
 }
 export function drawlog(state = initialState, action) {
@@ -13,6 +14,7 @@ export function drawlog(state = initialState, action) {
                 loading: false,
                 form_data: [],
                 list_data: [],
+                trans_data: [],
                 error: ''
             };
 
@@ -21,11 +23,13 @@ export function drawlog(state = initialState, action) {
                 ...state,
                 loading: true,
                 form_data: [],
+                trans_data: [],
                 error: ''
             };
-        case drawlogConstants.GET_FORM_SUCCESS:
-            return {
+        case drawlogConstants.GET_FORM_SUCCESS:    
+        return {
                 ...state,
+                trans_data:action.data.data.trans_arr,
                 form_data: action.data.data,
                 loading: false,
                 error: ''
@@ -34,6 +38,7 @@ export function drawlog(state = initialState, action) {
             return {
                 loading: false,
                 form_data: [],
+                trans_data: [],
                 error: ''
             };
 

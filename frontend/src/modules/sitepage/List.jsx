@@ -14,7 +14,7 @@ class SitePageList extends Component {
     componentDidMount = async () => {
       const { dispatch } = this.props;
       dispatch(resetSitePageDetails());
-      dispatch(getSitePageSearchRequest('dw'));
+      dispatch(getSitePageSearchRequest('AUCLATES'));
     }
 
     static getDerivedStateFromProps(props, state) {

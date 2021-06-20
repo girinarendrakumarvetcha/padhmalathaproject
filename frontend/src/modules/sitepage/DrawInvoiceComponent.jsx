@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
-import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
+import { routes } from "../../config/routes";
 
 class TrComponent extends Component {
     render() {
@@ -12,6 +13,7 @@ class TrComponent extends Component {
                 <td>{columnData.payableAmount}</td>
                 <td>{columnData.paidAmount}</td>
                 <td>{columnData.paymentStatus}</td>
+                <td><NavLink to={`${routes.DRAW_INVOICE_EDIT}/${columnData._id}/${columnData.drawMasterId}`}>Edit</NavLink></td>
             </tr>
         );
     }
@@ -31,6 +33,7 @@ class DrawInvoiceComponent extends Component {
                         <th>Payable Amount</th>
                         <th>Paid Amount</th>
                         <th>Payment Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>

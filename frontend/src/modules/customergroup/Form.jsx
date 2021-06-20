@@ -50,7 +50,7 @@ class CustomerGroupForm extends Component {
                             containerclass='col-md-6'
                             validate={[requiredlName]}
                             //onChange = {(e) => {this.handleUpdateShortCode(e,this.props)}}
-                            onChange = {(e) => { getFromShortCode(this.props,e,"group_short_code")}}
+                            onChange = {(e) => { getFromShortCode(e,this.props,"group_short_code")}}
                         />
                         <Field
                             type="text"
